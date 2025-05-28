@@ -282,7 +282,7 @@
                                 <img src="{{ asset('storage/' . $donasi->gambar) }}" alt="{{ $donasi->judul }}"
                                     class="w-full h-full object-cover">
                             @else
-                                <img src="https://via.placeholder.com/600x400?text=Program+Donasi"
+                                <img src="https://placehold.co/600x400"
                                     alt="Donation Program" class="w-full h-full object-cover">
                             @endif
 
@@ -374,7 +374,7 @@
                                 <img src="{{ asset('storage/' . $kegiatan->gambar_lokasi) }}"
                                     alt="{{ $kegiatan->judul }}" class="w-full h-full object-cover">
                             @else
-                                <img src="https://via.placeholder.com/600x400?text=Kegiatan+Sosial"
+                                <img src="https://placehold.co/600x400"
                                     alt="Kegiatan Sosial" class="w-full h-full object-cover">
                             @endif
 
