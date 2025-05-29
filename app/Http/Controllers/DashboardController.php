@@ -109,19 +109,18 @@ class DashboardController extends Controller
             ->get();
 
         // Get active events and donations for recommendations
-        $activeEvents = Kegiatan::where('status', 'aktif')
+        $activeEvents = Kegiatan::where('status', 'publish')
+            ->withCount('pendaftar')
             ->whereDate('tanggal_selesai', '>=', now())
             ->latest()
-            ->take(2)
             ->get();
 
         $activeDonations = Donasi::where('status', 'aktif')
             ->whereDate('tanggal_selesai', '>=', now())
             ->latest()
-            ->take(2)
             ->get();
 
-        return view('dashboard.user', compact(
+        return view('dashboard', compact(
             'totalDonations', 'totalDonated', 'latestDonations',
             'totalRegistrations', 'approvedRegistrations', 'latestRegistrations',
             'activeEvents', 'activeDonations'

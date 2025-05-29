@@ -157,35 +157,4 @@ class KegiatanController extends Controller
 
         return redirect()->route('kegiatan.index')->with('success', 'Kegiatan berhasil dihapus!');
     }
-
-    /**
-     * Display a listing of active events for public view.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function listActive()
-    {
-        $kegiatans = Kegiatan::where('status', 'aktif')
-            ->whereDate('tanggal_selesai', '>=', now()->toDateString()) // Gunakan toDateString() untuk konsistensi format tanggal
-            ->latest()
-            ->paginate(12);
-
-        return view('kegiatan.public', compact('kegiatans'));
-    }
-
-    /**
-     * Show details of a specific event for public.
-     *
-     * @param  \App\Models\Kegiatan  $kegiatan
-     * @return \Illuminate\Http\Response
-     */
-    public function publicShow(Kegiatan $kegiatan)
-    {
-        // Tambahkan pemeriksaan apakah kegiatan aktif
-        if ($kegiatan->status !== 'aktif' || $kegiatan->tanggal_selesai < now()->toDateString()) {
-            abort(404); // Kegiatan tidak aktif atau sudah selesai
-        }
-
-        return view('kegiatan.public-detail', compact('kegiatan'));
-    }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\DonasiController;
 use App\Http\Controllers\PemberiDonasiController;
 use App\Http\Controllers\DaftarKegiatanController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Route;
@@ -14,15 +15,13 @@ Route::get('/', [PublicController::class, 'welcome'])->name('welcome');
 Route::get('/donasi', [PublicController::class, 'donasi'])->name('public.donasi');
 Route::get('/donasi/{id}', [PublicController::class, 'showDonasi'])->name('donasi.detail');
 Route::get('/kegiatan', [PublicController::class, 'kegiatan'])->name('kegiatan');
-Route::get('/kegiatan/{id}', [PublicController::class, 'showKegiatan'])->name('kegiatan.show');
+Route::get('/kegiatan/{id}', [PublicController::class, 'showKegiatan'])->name('public.kegiatan.daftar');
 Route::get('/tentang', [PublicController::class, 'about'])->name('public.about');
 Route::get('/kontak', [PublicController::class, 'contact'])->name('public.contact');
 
 // Dashboard dan Profil untuk semua pengguna yang sudah login
-Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+Route::middleware('auth', 'role:user')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'userDashboard'])->name('dashboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
