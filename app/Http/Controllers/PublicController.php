@@ -144,7 +144,7 @@ class PublicController extends Controller
         }
 
         $filenameFollow = uniqid() . '.' . $buktiFollow->getClientOriginalExtension();
-        $buktiFollow->move(storage_path('app/bukti_follow'), $filenameFollow);
+        $buktiFollow->move(public_path('storage/bukti_follow'), $filenameFollow);
         $buktiFollowPath = 'bukti_follow/' . $filenameFollow;
 
         $buktiRepost = $request->file('bukti_repost');
@@ -154,7 +154,7 @@ class PublicController extends Controller
         }
 
         $filenameRepost = uniqid() . '.' . $buktiRepost->getClientOriginalExtension();
-        $buktiRepost->move(storage_path('app/bukti_repost'), $filenameRepost);
+        $buktiRepost->move(public_path('storage/bukti_repost'), $filenameRepost);
         $buktiRepostPath = 'bukti_repost/' . $filenameRepost;
 
         // Debug semua data yang akan disimpan
