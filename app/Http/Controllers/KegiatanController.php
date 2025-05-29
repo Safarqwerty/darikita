@@ -101,7 +101,7 @@ class KegiatanController extends Controller
      */
     public function update(Request $request, Kegiatan $kegiatan)
     {
-        $request->validate([
+        $data = $request->validate([
             'judul' => 'required|string|max:255',
             'jenis_kegiatan' => 'required|string|max:100',
             'lokasi' => 'required|string|max:255',
@@ -113,27 +113,18 @@ class KegiatanController extends Controller
             'status' => 'required|string|in:draft,publish,selesai',
         ]);
 
-        $data = [
-            'judul' => $request->judul,
-            'jenis_kegiatan' => $request->jenis_kegiatan,
-            'lokasi' => $request->lokasi,
-            'lokasi_kegiatan' => $request->lokasi_kegiatan,
-            'batas_pendaftar' => $request->batas_pendaftar,
-            'tanggal_mulai' => $request->tanggal_mulai,
-            'tanggal_selesai' => $request->tanggal_selesai,
-            'status' => $request->status,
-        ];
+        // dd($data['gambar_lokasi']);
 
-        // Handle file upload if new image is provided
-        if ($request->hasFile('gambar_lokasi')) {
-            // Delete old image
-            if ($kegiatan->gambar_lokasi) {
-                Storage::disk('public')->delete($kegiatan->gambar_lokasi);
-            }
-
-            $gambarPath = $request->file('gambar_lokasi')->store('kegiatan', 'public');
-            $data['gambar_lokasi'] = $gambarPath;
+        if (isset($data['gambar_lokasi'])) {
+            $file = $data['gambar_lokasi'];
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('storage/kegiatan'), $filename);
+            $data['gambar_lokasi'] = 'kegiatan/' . $filename;
+        } else {
+            // If no new image is uploaded, keep the existing one
+            $data['gambar_lokasi'] = $kegiatan->gambar_lokasi;
         }
+
 
         $kegiatan->update($data);
 

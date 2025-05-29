@@ -15,7 +15,6 @@ Route::get('/', [PublicController::class, 'welcome'])->name('welcome');
 Route::get('/donasi', [PublicController::class, 'donasi'])->name('public.donasi');
 Route::get('/donasi/{id}', [PublicController::class, 'showDonasi'])->name('donasi.detail');
 Route::get('/kegiatan', [PublicController::class, 'kegiatan'])->name('kegiatan');
-Route::get('/kegiatan/{id}', [PublicController::class, 'showKegiatan'])->name('public.kegiatan.show');
 Route::get('/tentang', [PublicController::class, 'about'])->name('public.about');
 Route::get('/kontak', [PublicController::class, 'contact'])->name('public.contact');
 
@@ -27,6 +26,7 @@ Route::middleware('auth', 'role:user')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/kegiatan/{id}', [PublicController::class, 'showKegiatan'])->name('public.kegiatan.show');
     Route::put('/kegiatan/{id}', [PublicController::class, 'daftarKegiatan'])->name('public.kegiatan.daftar');
 });
 
