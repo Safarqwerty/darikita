@@ -17,7 +17,7 @@ class KegiatanFactory extends Factory
             'lokasi' => fake()->city(),
             'lokasi_kegiatan' => fake()->address(),
             'jenis_kegiatan' => fake()->randomElement(['Pendidikan', 'Bencana']),
-            'gambar_lokasi' => 'default.jpg',
+            'gambar_lokasi' => null,
             'tanggal_mulai' => now()->addDays(5),
             'tanggal_selesai' => now()->addDays(10),
             'status' => fake()->randomElement(['draft', 'publish', 'selesai']),

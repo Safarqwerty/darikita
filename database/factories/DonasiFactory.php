@@ -21,7 +21,7 @@ class DonasiFactory extends Factory
             'tanggal_mulai' => now()->subDays(rand(0, 10)),
             'tanggal_selesai' => now()->addDays(rand(10, 30)),
             'status' => $this->faker->randomElement(['open', 'closed']),
-            'gambar' => 'donasi_default.jpg',
+            'gambar' => null,
             'created_by' => User::whereHas('roles', fn ($q) => $q->where('name', 'admin'))->inRandomOrder()->first()?->id ?? 1,
         ];
     }
