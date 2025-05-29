@@ -119,11 +119,18 @@ class DashboardController extends Controller
             ->whereDate('tanggal_selesai', '>=', now())
             ->latest()
             ->get();
+        
+        $registrationActivities = DaftarKegiatan::where('user_id', $userId)
+            ->with('kegiatan')
+            ->latest()
+            ->get();
+        
+            // dd($registrationActivities);
 
         return view('dashboard', compact(
             'totalDonations', 'totalDonated', 'latestDonations',
             'totalRegistrations', 'approvedRegistrations', 'latestRegistrations',
-            'activeEvents', 'activeDonations'
+            'activeEvents', 'activeDonations', 'registrationActivities'
         ));
     }
 }

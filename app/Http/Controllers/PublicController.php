@@ -108,12 +108,22 @@ class PublicController extends Controller
 
     public function daftarKegiatan(Request $request, $id)
     {
-         $kegiatan = Kegiatan::findOrFail($id);
-    
+        $kegiatan = Kegiatan::findOrFail($id);
+
         // Cek apakah kegiatan sudah berakhir
         if ($kegiatan->tanggal_selesai < now()) {
             return redirect()->route('public.kegiatan.show', $id)
                 ->with('error', 'Kegiatan ini sudah berakhir.');
+        }
+
+        // Validasi: Cek apakah user sudah pernah mendaftar untuk kegiatan ini
+        $existingRegistration = DaftarKegiatan::where('user_id', auth()->user()->id)
+            ->where('kegiatan_id', $id)
+            ->first();
+
+        if ($existingRegistration) {
+            return redirect()->route('dashboard')
+                ->with('error', 'Anda sudah pernah mendaftar untuk kegiatan ini.');
         }
 
         $request->validate([
@@ -134,9 +144,8 @@ class PublicController extends Controller
         }
 
         $filenameFollow = uniqid() . '.' . $buktiFollow->getClientOriginalExtension();
-        $buktiFollow->move(storage_path('app/public/bukti_follow'), $filenameFollow);
+        $buktiFollow->move(storage_path('app/bukti_follow'), $filenameFollow);
         $buktiFollowPath = 'bukti_follow/' . $filenameFollow;
-
 
         $buktiRepost = $request->file('bukti_repost');
         if (!$buktiRepost || !$buktiRepost->isValid()) {
@@ -145,7 +154,7 @@ class PublicController extends Controller
         }
 
         $filenameRepost = uniqid() . '.' . $buktiRepost->getClientOriginalExtension();
-        $buktiRepost->move(storage_path('app/public/bukti_repost'), $filenameRepost);
+        $buktiRepost->move(storage_path('app/bukti_repost'), $filenameRepost);
         $buktiRepostPath = 'bukti_repost/' . $filenameRepost;
 
         // Debug semua data yang akan disimpan
@@ -176,45 +185,5 @@ class PublicController extends Controller
                 ->with('error', 'Error save database: ' . $e->getMessage())
                 ->withInput();
         }
-    }
-
-    /**
-     * Daftar semua kegiatan untuk public
-     */
-    public function kegiatan(Request $request)
-    {
-        $query = Kegiatan::where('status', 'publish');
-
-        // Filter berdasarkan pencarian
-        if ($request->has('search') && $request->search) {
-            $query->where('judul', 'like', '%' . $request->search . '%')
-                  ->orWhere('jenis_kegiatan', 'like', '%' . $request->search . '%')
-                  ->orWhere('lokasi', 'like', '%' . $request->search . '%');
-        }
-
-        // Filter berdasarkan jenis kegiatan jika ada
-        if ($request->has('jenis') && $request->jenis) {
-            $query->where('jenis_kegiatan', $request->jenis);
-        }
-
-        $kegiatans = $query->latest()->paginate(12);
-
-        return view('public.kegiatan.index', compact('kegiatans'));
-    }
-
-    /**
-     * Halaman tentang
-     */
-    public function about()
-    {
-        return view('public.about');
-    }
-
-    /**
-     * Halaman kontak
-     */
-    public function contact()
-    {
-        return view('public.contact');
     }
 }
