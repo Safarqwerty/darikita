@@ -324,12 +324,11 @@
                                 <div>
                                     <p class="text-gray-800 font-semibold">
                                         @php
-                                            $remainingDays = \Carbon\Carbon::now()->diffInDays(
+                                            $remainingDays = \Carbon\Carbon::now()->floatDiffInDays(
                                                 $donasi->tanggal_selesai,
-                                                false,
                                             );
                                         @endphp
-                                        {{ $remainingDays }} hari
+                                        {{ number_format($remainingDays) }} hari lagi
                                     </p>
                                     <p class="text-gray-500 text-xs">Tersisa</p>
                                 </div>
@@ -396,7 +395,7 @@
 
                         <!-- Card Content -->
                         <div class="p-6">
-                            <h3 class="text-xl font-bold text-gray-800 mb-2 line-clamp-2">{{ $kegiatan->judul }}</h3>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2 line-clamp-2">{{ str($kegiatan->judul)->limit(20, '...') }}</h3>
 
                             <!-- Location Information -->
                             <div class="flex items-center text-gray-600 text-sm mb-3">
@@ -434,32 +433,30 @@
                             <div class="flex justify-between items-center mb-5 text-sm">
                                 <div>
                                     <p class="text-gray-800 font-semibold">
+                                        Dimulai
                                         @php
-                                            $daysUntil = \Carbon\Carbon::now()->diffInDays(
-                                                $kegiatan->tanggal_mulai,
-                                                false,
-                                            );
-                                        @endphp
-                                        @if ($daysUntil > 0)
-                                            {{ $daysUntil }} hari lagi
-                                        @elseif($daysUntil == 0)
-                                            Hari ini
-                                        @else
-                                            Sedang berlangsung
-                                        @endif
-                                    </p>
-                                    <p class="text-gray-500 text-xs">Dimulai</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-gray-800 font-semibold">
-                                        @php
+                                            $now = Carbon\Carbon::now();
+                                            $startDate = Carbon\Carbon::parse($kegiatan->tanggal_mulai);
+                                            $endDate = Carbon\Carbon::parse($kegiatan->tanggal_selesai);
+
+                                            if ($now->lt($startDate)) {
+                                                $daysUntil = $now->floatDiffInDays($startDate); // Lebih presisi
+                                                $status = number_format($daysUntil) . ' hari lagi'; // Batasi hanya 1 digit desimal
+                                            } elseif ($now->between($startDate, $endDate)) {
+                                                $status = 'Sedang berlangsung';
+                                            } else {
+                                                $status = 'Telah berakhir';
+                                            }
+
                                             $duration = $startDate->diffInDays($endDate) + 1;
                                         @endphp
-                                        {{ $duration }} hari
+
+                                        {{ $status }}
                                     </p>
-                                    <p class="text-gray-500 text-xs">Durasi</p>
                                 </div>
                             </div>
+
+
 
                             <!-- CTA Button -->
                             <a href="{{ route('public.kegiatan.show', $kegiatan->id) }}"
