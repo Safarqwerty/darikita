@@ -16,7 +16,7 @@ class DaftarKegiatan extends Model
         'tanggal_daftar',
         'latar_belakang',
         'pernah_relawan',
-        'nama_kegiatan_relawan',
+        'nama_kegiatan_sebelumnya',
         'jenis_kendaraan',
         'merk_kendaraan',
         'siap_kontribusi',

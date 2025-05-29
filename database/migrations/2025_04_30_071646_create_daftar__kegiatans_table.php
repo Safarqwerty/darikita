@@ -22,7 +22,7 @@ return new class extends Migration
 
             // Tambahan input dari calon peserta:
             $table->text('latar_belakang')->nullable();
-            $table->enum('pernah_relawan', ['pernah', 'belum'])->default('belum');
+            $table->boolean('pernah_relawan')->default(false);
             $table->string('nama_kegiatan_sebelumnya')->nullable();
             $table->string('jenis_kendaraan')->nullable();
             $table->string('merk_kendaraan')->nullable();

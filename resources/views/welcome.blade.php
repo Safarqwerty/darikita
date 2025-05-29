@@ -462,7 +462,7 @@
                             </div>
 
                             <!-- CTA Button -->
-                            <a href="{{ route('public.kegiatan.daftar', $kegiatan->id) }}"
+                            <a href="{{ route('public.kegiatan.show', $kegiatan->id) }}"
                                 class="w-full block text-center bg-green-600 hover:bg-green-700 py-2.5 text-white rounded-lg font-medium transition-all">
                                 Lihat Detail
                             </a>

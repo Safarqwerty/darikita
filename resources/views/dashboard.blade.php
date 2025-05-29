@@ -132,7 +132,7 @@
                                     <div class="flex justify-between items-center pt-2">
                                         @if(!isset($item->batas_pendaftar) || $persentase < 100)
                                             <a 
-                                                href="{{ route('public.kegiatan.daftar', $item->id) }}"
+                                                href="{{ route('public.kegiatan.show', $item->id) }}"
                                                 class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200">
                                                 Daftar
                                             </a>

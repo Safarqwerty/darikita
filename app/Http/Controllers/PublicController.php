@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Donasi;
 use App\Models\Kegiatan;
 use Illuminate\Http\Request;
+use App\Models\DaftarKegiatan;
+use Illuminate\Support\Facades\Storage;
 
 class PublicController extends Controller
 {
@@ -102,6 +104,78 @@ class PublicController extends Controller
             ->get();
 
         return view('public.kegiatan.detail', compact('kegiatan', 'relatedKegiatans'));
+    }
+
+    public function daftarKegiatan(Request $request, $id)
+    {
+         $kegiatan = Kegiatan::findOrFail($id);
+    
+        // Cek apakah kegiatan sudah berakhir
+        if ($kegiatan->tanggal_selesai < now()) {
+            return redirect()->route('public.kegiatan.show', $id)
+                ->with('error', 'Kegiatan ini sudah berakhir.');
+        }
+
+        $request->validate([
+            'latar_belakang' => 'required|string',
+            'pernah_relawan' => 'required|boolean',
+            'nama_kegiatan_sebelumnya' => 'nullable|string',
+            'jenis_kendaraan' => 'required|string',
+            'merk_kendaraan' => 'nullable|string',
+            'siap_kontribusi' => 'required|boolean',
+            'bukti_follow' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'bukti_repost' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $buktiFollow = $request->file('bukti_follow');
+        if (!$buktiFollow || !$buktiFollow->isValid()) {
+            return redirect()->back()
+                ->with('error', 'File bukti_follow tidak valid atau tidak ditemukan.');
+        }
+
+        $filenameFollow = uniqid() . '.' . $buktiFollow->getClientOriginalExtension();
+        $buktiFollow->move(storage_path('app/public/bukti_follow'), $filenameFollow);
+        $buktiFollowPath = 'bukti_follow/' . $filenameFollow;
+
+
+        $buktiRepost = $request->file('bukti_repost');
+        if (!$buktiRepost || !$buktiRepost->isValid()) {
+            return redirect()->back()
+                ->with('error', 'File bukti_repost tidak valid atau tidak ditemukan.');
+        }
+
+        $filenameRepost = uniqid() . '.' . $buktiRepost->getClientOriginalExtension();
+        $buktiRepost->move(storage_path('app/public/bukti_repost'), $filenameRepost);
+        $buktiRepostPath = 'bukti_repost/' . $filenameRepost;
+
+        // Debug semua data yang akan disimpan
+        $dataToSave = [
+            'user_id' => auth()->user()->id,
+            'kegiatan_id' => $id,
+            'status' => 'pending',
+            'tanggal_daftar' => now(),
+            'latar_belakang' => $request->latar_belakang,
+            'pernah_relawan' => $request->pernah_relawan,
+            'nama_kegiatan_sebelumnya' => $request->nama_kegiatan_sebelumnya,
+            'jenis_kendaraan' => $request->jenis_kendaraan,
+            'merk_kendaraan' => $request->merk_kendaraan,
+            'siap_kontribusi' => $request->siap_kontribusi,
+            'bukti_follow' => $buktiFollowPath,
+            'bukti_repost' => $buktiRepostPath,
+        ];
+
+        // Coba save ke database
+        try {
+            DaftarKegiatan::create($dataToSave);
+            return redirect()->route('dashboard')->with('success', 'Pendaftaran berhasil dikirim!');
+        } catch (\Exception $e) {
+            // Hapus file jika save gagal
+            Storage::disk('public')->delete([$buktiFollowPath, $buktiRepostPath]);
+            
+            return redirect()->back()
+                ->with('error', 'Error save database: ' . $e->getMessage())
+                ->withInput();
+        }
     }
 
     /**

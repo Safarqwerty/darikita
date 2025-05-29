@@ -70,9 +70,9 @@ return [
     */
 
     'links' => [
-        // public_path('storage') => storage_path('app/public'),
-        public_path('kegiatan') => storage_path('app/kegiatan'),
-        public_path('donasi') => storage_path('app/donasi')
+        public_path('storage') => storage_path('app/public'),
+        // public_path('kegiatan') => storage_path('app/kegiatan'),
+        // public_path('donasi') => storage_path('app/donasi')
     ],
 
 ];
