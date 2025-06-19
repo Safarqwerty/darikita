@@ -115,89 +115,187 @@
 
 <body>
     <!-- Navbar -->
-    <nav class="bg-white border-gray-200">
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-            <a href="#" class="flex items-center space-x-3">
+            <!-- Logo -->
+            <a href="{{ url('/') }}" class="flex items-center space-x-3">
                 <img src="{{ asset('logo.png') }}" class="h-8" alt="Logo" />
                 <span class="self-center text-2xl font-semibold whitespace-nowrap text-gray-900">Darikita</span>
             </a>
-            <div class="flex items-center md:order-2 space-x-3 md:space-x-4">
-                <!-- Tombol Masuk -->
-                <a href="{{ route('login') }}"
-                    class="text-blue-600 border border-blue-600 hover:bg-blue-50 px-4 py-2 rounded-lg text-sm font-medium transition">
-                    Masuk
-                </a>
-                <!-- Tombol Daftar -->
-                <a href="{{ route('register') }}"
-                    class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-medium transition">
-                    Daftar
-                </a>
-                <!-- Dropdown Profil User -->
-                <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300"
-                    id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
-                    data-dropdown-placement="bottom">
-                    <span class="sr-only">Open user menu</span>
-                    <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="user photo">
-                </button>
-                <!-- Dropdown Menu -->
-                <div id="user-dropdown"
-                    class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-sm">
-                    <div class="px-4 py-3">
-                        <span class="block text-sm text-gray-900">Bonnie Green</span>
-                        <span class="block text-sm text-gray-500 truncate">name@flowbite.com</span>
-                    </div>
-                    <ul class="py-2" aria-labelledby="user-menu-button">
-                        <li>
-                            <a href="#"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a>
-                        </li>
-                        <li>
-                            <a href="#"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-                        </li>
-                        <li>
-                            <a href="#"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Earnings</a>
-                        </li>
-                        <li>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign
-                                out</a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- Toggle Hamburger -->
-                <button data-collapse-toggle="navbar-user" type="button"
-                    class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
-                    aria-controls="navbar-user" aria-expanded="false">
-                    <span class="sr-only">Open main menu</span>
-                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M1 1h15M1 7h15M1 13h15" />
-                    </svg>
-                </button>
-            </div>
-            <!-- Menu Utama -->
-            <div class="items-center justify-between hidden md:flex md:w-auto md:order-1" id="navbar-user">
-                <ul
-                    class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white">
+
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex md:items-center md:space-x-8">
+                <ul class="flex space-x-8">
                     <li>
-                        <a href="{{ url('/') }}" class="block py-2 px-3 text-blue-700 md:p-0"
-                            aria-current="page">Beranda</a>
+                        <a href="{{ url('/') }}"
+                            class="text-blue-600 font-medium hover:text-blue-800 transition-colors duration-200">
+                            Beranda
+                        </a>
                     </li>
                     <li>
-                        <a href="#program" class="block py-2 px-3 text-gray-700 hover:text-blue-700 md:p-0">Program</a>
+                        <a href="#program"
+                            class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">
+                            Program
+                        </a>
                     </li>
                     <li>
-                        <a href="#impact" class="block py-2 px-3 text-gray-700 hover:text-blue-700 md:p-0">Impact</a>
+                        <a href="#impact"
+                            class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">
+                            Impact
+                        </a>
                     </li>
                     <li>
                         <a href="#testimonials"
-                            class="block py-2 px-3 text-gray-700 hover:text-blue-700 md:p-0">Testimoni</a>
-                    </li>
-                    <li>
-                        <a href="#faq" class="block py-2 px-3 text-gray-700 hover:text-blue-700 md:p-0">Faq</a>
+                            class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">
+                            Testimoni
+                        </a>
                     </li>
                 </ul>
+            </div>
+
+            <!-- Auth Buttons & Profile -->
+            <div class="hidden md:flex items-center space-x-4">
+                @guest
+                    <!-- Login Button -->
+                    <a href="{{ route('login') }}"
+                        class="text-blue-600 border border-blue-600 hover:bg-blue-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+                        Masuk
+                    </a>
+                    <!-- Register Button -->
+                    <a href="{{ route('register') }}"
+                        class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+                        Daftar
+                    </a>
+                @endguest
+
+                @auth
+                    <!-- Profile Dropdown -->
+                    <div class="relative">
+                        <button type="button"
+                            class="flex items-center space-x-2 text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 p-0.5"
+                            id="user-menu-button">
+                            <img class="w-8 h-8 rounded-full"
+                                src="{{ Auth::user()->avatar ?? '/docs/images/people/profile-picture-3.jpg' }}"
+                                alt="Profile">
+                        </button>
+
+                        <!-- Dropdown Menu -->
+                        <div id="user-dropdown"
+                            class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 hidden">
+                            <div class="px-4 py-3 border-b border-gray-200">
+                                <p class="text-sm font-medium text-gray-900">{{ Auth::user()->name ?? 'User' }}</p>
+                                <p class="text-sm text-gray-500">{{ Auth::user()->email ?? 'user@example.com' }}</p>
+                            </div>
+                            <a href="{{ route('dashboard') }}"
+                                class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200">
+                                <svg class="mr-3 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 21l4-7 4 7">
+                                    </path>
+                                </svg>
+                                Dashboard
+                            </a>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit"
+                                    class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200">
+                                    <svg class="mr-3 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                                        </path>
+                                    </svg>
+                                    Sign out
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @endauth
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button type="button"
+                class="md:hidden inline-flex items-center p-2 w-10 h-10 justify-center text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                id="mobile-menu-button">
+                <span class="sr-only">Open main menu</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                    </path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-4 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
+                <!-- Navigation Links -->
+                <a href="{{ url('/') }}" class="block px-3 py-2 text-blue-600 font-medium rounded-md">
+                    Beranda
+                </a>
+                <a href="#program"
+                    class="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors duration-200">
+                    Program
+                </a>
+                <a href="#impact"
+                    class="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors duration-200">
+                    Impact
+                </a>
+                <a href="#testimonials"
+                    class="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors duration-200">
+                    Testimoni
+                </a>
+
+                <!-- Auth Section -->
+                <div class="pt-4 border-t border-gray-200">
+                    @guest
+                        <div class="space-y-2">
+                            <a href="{{ route('login') }}"
+                                class="block w-full text-center px-3 py-2 text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50 transition-colors duration-200">
+                                Masuk
+                            </a>
+                            <a href="{{ route('register') }}"
+                                class="block w-full text-center px-3 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors duration-200">
+                                Daftar
+                            </a>
+                        </div>
+                    @endguest
+
+                    @auth
+                        <div class="space-y-2">
+                            <div class="flex items-center px-3 py-2 space-x-3">
+                                <img class="w-8 h-8 rounded-full"
+                                    src="{{ Auth::user()->avatar ?? '/docs/images/people/profile-picture-3.jpg' }}"
+                                    alt="Profile">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900">{{ Auth::user()->name ?? 'User' }}</p>
+                                    <p class="text-xs text-gray-500">{{ Auth::user()->email ?? 'user@example.com' }}</p>
+                                </div>
+                            </div>
+                            <a href="{{ route('dashboard') }}"
+                                class="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md transition-colors duration-200">
+                                <svg class="mr-3 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 21l4-7 4 7"></path>
+                                </svg>
+                                Dashboard
+                            </a>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit"
+                                    class="flex items-center w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md transition-colors duration-200">
+                                    <svg class="mr-3 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                                        </path>
+                                    </svg>
+                                    Sign out
+                                </button>
+                            </form>
+                        </div>
+                    @endauth
+                </div>
             </div>
         </div>
     </nav>
@@ -263,6 +361,131 @@
         </div>
     </section>
 
+    <section id="upcoming-activities" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 section-title">Kegiatan Mendatang</h2>
+                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Bergabunglah dengan berbagai kegiatan sosial,
+                    pendidikan, dan bantuan bencana untuk membuat dampak positif di masyarakat</p>
+            </div>
+
+            <div class="px-32 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                @foreach ($upcomingKegiatans as $kegiatan)
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2 border border-gray-100"
+                        data-aos="fade-up" data-aos-delay="{{ $loop->iteration * 100 }}">
+                        <!-- Activity Card Image -->
+                        <div class="relative h-48 overflow-hidden">
+                            @if ($kegiatan->gambar_sampul)
+                                <img src="{{ asset('storage/' . $kegiatan->gambar_sampul) }}"
+                                    alt="{{ $kegiatan->nama_kegiatan }}" class="w-full h-full object-cover">
+                            @else
+                                <img src="https://placehold.co/600x400" alt="Kegiatan Sosial"
+                                    class="w-full h-full object-cover">
+                            @endif
+
+                            <!-- Activity Type Badge -->
+                            <div
+                                class="absolute top-4 right-4 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                                {{ ucfirst($kegiatan->jenis_kegiatan) }}
+                            </div>
+
+                            <!-- Date Badge -->
+                            <div
+                                class="absolute top-4 left-4 bg-white bg-opacity-90 text-gray-800 text-xs font-bold px-3 py-1 rounded-full">
+                                @php
+                                    $startDate = \Carbon\Carbon::parse($kegiatan->tanggal_mulai_kegiatan);
+                                @endphp
+                                {{ $startDate->format('d M Y') }}
+                            </div>
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2 line-clamp-2">
+                                {{ \Illuminate\Support\Str::limit($kegiatan->nama_kegiatan, 20, '...') }}
+                            </h3>
+
+                            <!-- Location Information -->
+                            <div class="flex items-center text-gray-600 text-sm mb-3">
+                                <i class="fas fa-map-marker-alt mr-2"></i>
+                                <span class="line-clamp-1">
+                                    {{ $kegiatan->kelurahan_desa }}, {{ $kegiatan->kecamatan }},
+                                    {{ $kegiatan->kabupaten_kota }}, {{ $kegiatan->provinsi }}
+                                </span>
+                            </div>
+
+                            <!-- Date Range -->
+                            <div class="flex items-center text-gray-600 text-sm mb-4">
+                                <i class="fas fa-calendar-alt mr-2"></i>
+                                <span>
+                                    @php
+                                        $startDate = \Carbon\Carbon::parse($kegiatan->tanggal_mulai_kegiatan);
+                                        $endDate = \Carbon\Carbon::parse($kegiatan->tanggal_selesai_kegiatan);
+                                    @endphp
+                                    @if ($startDate->isSameDay($endDate))
+                                        {{ $startDate->format('d M Y') }}
+                                    @else
+                                        {{ $startDate->format('d M') }} - {{ $endDate->format('d M Y') }}
+                                    @endif
+                                </span>
+                            </div>
+
+                            <!-- Participant Limit (if exists) -->
+                            @if ($kegiatan->batas_pendaftar)
+                                <div class="flex items-center justify-between mb-4 text-sm">
+                                    <div class="flex items-center text-gray-600">
+                                        <i class="fas fa-users mr-2"></i>
+                                        <span>Maksimal {{ number_format($kegiatan->batas_pendaftar) }} peserta</span>
+                                    </div>
+                                </div>
+                            @endif
+
+                            <!-- Time Information -->
+                            <div class="flex justify-between items-center mb-5 text-sm">
+                                <div>
+                                    <p class="text-gray-800 font-semibold">
+                                        Dimulai
+                                        @php
+                                            $now = Carbon\Carbon::now();
+                                            $startDate = Carbon\Carbon::parse($kegiatan->tanggal_mulai_kegiatan);
+                                            $endDate = Carbon\Carbon::parse($kegiatan->tanggal_selesai_kegiatan);
+
+                                            if ($now->lt($startDate)) {
+                                                $daysUntil = $now->floatDiffInDays($startDate);
+                                                $status = number_format($daysUntil) . ' hari lagi';
+                                            } elseif ($now->between($startDate, $endDate)) {
+                                                $status = 'Sedang berlangsung';
+                                            } else {
+                                                $status = 'Telah berakhir';
+                                            }
+                                        @endphp
+
+                                        {{ $status }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- CTA Button -->
+                            <a href="{{ route('public.kegiatan.show', $kegiatan->id) }}"
+                                class="w-full block text-center bg-green-600 hover:bg-green-700 py-2.5 text-white rounded-lg font-medium transition-all">
+                                Lihat Detail
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- See All Activities Button -->
+            <div class="mt-12 text-center">
+                <a href="{{ route('kegiatan') }}"
+                    class="btn-secondary px-8 py-3 bg-white text-gray-700 rounded-xl font-medium border border-gray-200 hover:bg-gray-50">
+                    Lihat Semua Kegiatan
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Open Donations Section -->
     <section id="open-donations" class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
@@ -282,8 +505,8 @@
                                 <img src="{{ asset('storage/' . $donasi->gambar) }}" alt="{{ $donasi->judul }}"
                                     class="w-full h-full object-cover">
                             @else
-                                <img src="https://placehold.co/600x400"
-                                    alt="Donation Program" class="w-full h-full object-cover">
+                                <img src="https://placehold.co/600x400" alt="Donation Program"
+                                    class="w-full h-full object-cover">
                             @endif
 
                             <!-- Category Badge -->
@@ -349,130 +572,6 @@
                 <a href="{{ route('donasi.index') }}"
                     class="btn-secondary px-8 py-3 bg-white text-gray-700 rounded-xl font-medium border border-gray-200 hover:bg-gray-50">
                     Lihat Semua Program
-                    <i class="fas fa-arrow-right ml-2"></i>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section id="upcoming-activities" class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-gray-800 section-title">Kegiatan Mendatang</h2>
-                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Bergabunglah dengan berbagai kegiatan sosial,
-                    pendidikan, dan bantuan bencana untuk membuat dampak positif di masyarakat</p>
-            </div>
-
-            <div class="px-32 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                @foreach ($upcomingKegiatans as $kegiatan)
-                    <div class="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2 border border-gray-100"
-                        data-aos="fade-up" data-aos-delay="{{ $loop->iteration * 100 }}">
-                        <!-- Activity Card Image -->
-                        <div class="relative h-48 overflow-hidden">
-                            @if ($kegiatan->gambar_lokasi)
-                                <img src="{{ asset('storage/' . $kegiatan->gambar_lokasi) }}"
-                                    alt="{{ $kegiatan->judul }}" class="w-full h-full object-cover">
-                            @else
-                                <img src="https://placehold.co/600x400"
-                                    alt="Kegiatan Sosial" class="w-full h-full object-cover">
-                            @endif
-
-                            <!-- Activity Type Badge -->
-                            <div
-                                class="absolute top-4 right-4 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-                                {{ ucfirst($kegiatan->jenis_kegiatan) }}
-                            </div>
-
-                            <!-- Date Badge -->
-                            <div
-                                class="absolute top-4 left-4 bg-white bg-opacity-90 text-gray-800 text-xs font-bold px-3 py-1 rounded-full">
-                                @php
-                                    $startDate = \Carbon\Carbon::parse($kegiatan->tanggal_mulai);
-                                @endphp
-                                {{ $startDate->format('d M Y') }}
-                            </div>
-                        </div>
-
-                        <!-- Card Content -->
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-gray-800 mb-2 line-clamp-2">{{ str($kegiatan->judul)->limit(20, '...') }}</h3>
-
-                            <!-- Location Information -->
-                            <div class="flex items-center text-gray-600 text-sm mb-3">
-                                <i class="fas fa-map-marker-alt mr-2"></i>
-                                <span class="line-clamp-1">{{ $kegiatan->lokasi }}</span>
-                            </div>
-
-                            <!-- Date Range -->
-                            <div class="flex items-center text-gray-600 text-sm mb-4">
-                                <i class="fas fa-calendar-alt mr-2"></i>
-                                <span>
-                                    @php
-                                        $startDate = \Carbon\Carbon::parse($kegiatan->tanggal_mulai);
-                                        $endDate = \Carbon\Carbon::parse($kegiatan->tanggal_selesai);
-                                    @endphp
-                                    @if ($startDate->isSameDay($endDate))
-                                        {{ $startDate->format('d M Y') }}
-                                    @else
-                                        {{ $startDate->format('d M') }} - {{ $endDate->format('d M Y') }}
-                                    @endif
-                                </span>
-                            </div>
-
-                            <!-- Participant Limit (if exists) -->
-                            @if ($kegiatan->batas_pendaftar)
-                                <div class="flex items-center justify-between mb-4 text-sm">
-                                    <div class="flex items-center text-gray-600">
-                                        <i class="fas fa-users mr-2"></i>
-                                        <span>Maksimal {{ number_format($kegiatan->batas_pendaftar) }} peserta</span>
-                                    </div>
-                                </div>
-                            @endif
-
-                            <!-- Time Information -->
-                            <div class="flex justify-between items-center mb-5 text-sm">
-                                <div>
-                                    <p class="text-gray-800 font-semibold">
-                                        Dimulai
-                                        @php
-                                            $now = Carbon\Carbon::now();
-                                            $startDate = Carbon\Carbon::parse($kegiatan->tanggal_mulai);
-                                            $endDate = Carbon\Carbon::parse($kegiatan->tanggal_selesai);
-
-                                            if ($now->lt($startDate)) {
-                                                $daysUntil = $now->floatDiffInDays($startDate); // Lebih presisi
-                                                $status = number_format($daysUntil) . ' hari lagi'; // Batasi hanya 1 digit desimal
-                                            } elseif ($now->between($startDate, $endDate)) {
-                                                $status = 'Sedang berlangsung';
-                                            } else {
-                                                $status = 'Telah berakhir';
-                                            }
-
-                                            $duration = $startDate->diffInDays($endDate) + 1;
-                                        @endphp
-
-                                        {{ $status }}
-                                    </p>
-                                </div>
-                            </div>
-
-
-
-                            <!-- CTA Button -->
-                            <a href="{{ route('public.kegiatan.show', $kegiatan->id) }}"
-                                class="w-full block text-center bg-green-600 hover:bg-green-700 py-2.5 text-white rounded-lg font-medium transition-all">
-                                Lihat Detail
-                            </a>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-
-            <!-- See All Activities Button -->
-            <div class="mt-12 text-center">
-                <a href="{{ route('kegiatan') }}"
-                    class="btn-secondary px-8 py-3 bg-white text-gray-700 rounded-xl font-medium border border-gray-200 hover:bg-gray-50">
-                    Lihat Semua Kegiatan
                     <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
@@ -717,37 +816,6 @@
         </div>
     </section>
 
-    <!-- FAQ Section -->
-    <section id="faq" class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center text-gray-800 section-title mb-12">
-                Pertanyaan yang Sering Diajukan
-            </h2>
-
-            <div class="max-w-3xl mx-auto space-y-6">
-                <div class="bg-gray-50 rounded-xl p-6" data-aos="fade-up" data-aos-delay="300">
-                    <h3 class="font-semibold text-lg text-gray-800 mb-2">Berapa banyak waktu yang perlu saya luangkan
-                        sebagai relawan?</h3>
-                    <p class="text-gray-600">
-                        Kami memahami bahwa setiap orang memiliki keterbatasan waktu. Ada program relawan yang bisa kamu
-                        ikuti secara penuh waktu, paruh waktu, atau bahkan hanya di akhir pekan. Kamu bisa memilih
-                        program yang sesuai dengan ketersediaan waktumu.
-                    </p>
-                </div>
-
-                <div class="bg-gray-50 rounded-xl p-6" data-aos="fade-up" data-aos-delay="400">
-                    <h3 class="font-semibold text-lg text-gray-800 mb-2">Bagaimana jika saya tidak bisa menjadi relawan
-                        tapi ingin berkontribusi?</h3>
-                    <p class="text-gray-600">
-                        Kamu tetap bisa berkontribusi melalui donasi, menjadi duta kampanye di media sosial, atau
-                        menghubungkan kami dengan mitra potensial. Setiap bentuk dukungan sangat berarti bagi
-                        keberlanjutan program-program kami.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- CTA Section -->
     <section class="cta-section py-16">
         <div class="container mx-auto px-4">
@@ -959,6 +1027,58 @@
     <script src="https://unpkg.com/flowbite@2.3.0/dist/flowbite.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+
+                    // Update button icon
+                    const svg = mobileMenuButton.querySelector('svg');
+                    if (mobileMenu.classList.contains('hidden')) {
+                        svg.innerHTML =
+                            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+                    } else {
+                        svg.innerHTML =
+                            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+                    }
+                });
+            }
+
+            // Profile dropdown toggle (desktop)
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userDropdown = document.getElementById('user-dropdown');
+
+            if (userMenuButton && userDropdown) {
+                userMenuButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('hidden');
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
+                        userDropdown.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Close mobile menu when clicking on links
+            const mobileLinks = mobileMenu?.querySelectorAll('a');
+            if (mobileLinks) {
+                mobileLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        mobileMenu.classList.add('hidden');
+                        const svg = mobileMenuButton.querySelector('svg');
+                        svg.innerHTML =
+                            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+                    });
+                });
+            }
+        });
         // Initialize AOS
         AOS.init({
             duration: 800,

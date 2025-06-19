@@ -10,9 +10,9 @@
 
                 <div class="mb-4">
                     <label class="block font-semibold mb-1">Nama Kegiatan</label>
-                    <input type="text" name="judul" class="w-full border rounded px-3 py-2"
-                        value="{{ old('judul') }}" required>
-                    @error('judul')
+                    <input type="text" name="nama_kegiatan" class="w-full border rounded px-3 py-2"
+                        value="{{ old('nama_kegiatan') }}" required>
+                    @error('nama_kegiatan')
                         <p class="text-red-600 text-sm">{{ $message }}</p>
                     @enderror
                 </div>
@@ -27,20 +27,58 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="block font-semibold mb-1">Lokasi (Umum)</label>
-                    <input type="text" name="lokasi" class="w-full border rounded px-3 py-2"
-                        value="{{ old('lokasi') }}" required>
-                    @error('lokasi')
+                    <label class="block font-semibold mb-1">Deskripsi Kegiatan</label>
+                    <textarea name="deskripsi_kegiatan" class="w-full border rounded px-3 py-2" rows="4" required>{{ old('deskripsi_kegiatan') }}</textarea>
+                    @error('deskripsi_kegiatan')
                         <p class="text-red-600 text-sm">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div class="mb-4">
-                    <label class="block font-semibold mb-1">Alamat Lengkap</label>
-                    <textarea name="lokasi_kegiatan" class="w-full border rounded px-3 py-2" required>{{ old('lokasi_kegiatan') }}</textarea>
-                    @error('lokasi_kegiatan')
+                    <label class="block font-semibold mb-1">Syarat & Ketentuan (opsional)</label>
+                    <textarea name="syarat_ketentuan" class="w-full border rounded px-3 py-2" rows="3">{{ old('syarat_ketentuan') }}</textarea>
+                    @error('syarat_ketentuan')
                         <p class="text-red-600 text-sm">{{ $message }}</p>
                     @enderror
+                </div>
+
+                <!-- Lokasi Section -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800">Lokasi Kegiatan</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-semibold mb-1">Provinsi</label>
+                            <input type="text" name="provinsi" class="w-full border rounded px-3 py-2"
+                                value="{{ old('provinsi') }}" required>
+                            @error('provinsi')
+                                <p class="text-red-600 text-sm">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-1">Kabupaten/Kota</label>
+                            <input type="text" name="kabupaten_kota" class="w-full border rounded px-3 py-2"
+                                value="{{ old('kabupaten_kota') }}" required>
+                            @error('kabupaten_kota')
+                                <p class="text-red-600 text-sm">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-1">Kecamatan</label>
+                            <input type="text" name="kecamatan" class="w-full border rounded px-3 py-2"
+                                value="{{ old('kecamatan') }}" required>
+                            @error('kecamatan')
+                                <p class="text-red-600 text-sm">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-1">Kelurahan/Desa</label>
+                            <input type="text" name="kelurahan_desa" class="w-full border rounded px-3 py-2"
+                                value="{{ old('kelurahan_desa') }}" required>
+                            @error('kelurahan_desa')
+                                <p class="text-red-600 text-sm">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
 
                 <div class="mb-4">
@@ -52,30 +90,72 @@
                     @enderror
                 </div>
 
-                <div class="mb-4">
-                    <label class="block font-semibold mb-1">Gambar Lokasi (opsional)</label>
-                    <input type="file" name="gambar_lokasi" class="w-full border rounded px-3 py-2">
-                    @error('gambar_lokasi')
-                        <p class="text-red-600 text-sm">{{ $message }}</p>
-                    @enderror
+                <!-- Gambar Section -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800">Gambar Kegiatan</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-semibold mb-1">Gambar Sampul (opsional)</label>
+                            <input type="file" name="gambar_sampul" class="w-full border rounded px-3 py-2"
+                                accept="image/*">
+                            <p class="text-sm text-gray-600 mt-1">Upload 1 gambar untuk sampul kegiatan</p>
+                            @error('gambar_sampul')
+                                <p class="text-red-600 text-sm">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-1">Gambar Lokasi (opsional)</label>
+                            <input type="file" name="gambar_lokasi[]" class="w-full border rounded px-3 py-2"
+                                accept="image/*" multiple>
+                            <p class="text-sm text-gray-600 mt-1">Upload maksimal 10 gambar lokasi kegiatan</p>
+                            @error('gambar_lokasi')
+                                <p class="text-red-600 text-sm">{{ $message }}</p>
+                            @enderror
+                            @error('gambar_lokasi.*')
+                                <p class="text-red-600 text-sm">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block font-semibold mb-1">Tanggal Mulai</label>
-                        <input type="date" name="tanggal_mulai" class="w-full border rounded px-3 py-2"
-                            value="{{ old('tanggal_mulai') }}" required>
-                        @error('tanggal_mulai')
-                            <p class="text-red-600 text-sm">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    <div>
-                        <label class="block font-semibold mb-1">Tanggal Selesai</label>
-                        <input type="date" name="tanggal_selesai" class="w-full border rounded px-3 py-2"
-                            value="{{ old('tanggal_selesai') }}" required>
-                        @error('tanggal_selesai')
-                            <p class="text-red-600 text-sm">{{ $message }}</p>
-                        @enderror
+                <!-- Tanggal Section -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800">Jadwal Kegiatan</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-semibold mb-1">Tanggal Mulai Pendaftaran</label>
+                            <input type="date" name="tanggal_mulai_daftar" class="w-full border rounded px-3 py-2"
+                                value="{{ old('tanggal_mulai_daftar') }}" required>
+                            @error('tanggal_mulai_daftar')
+                                <p class="text-red-600 text-sm">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-1">Tanggal Selesai Pendaftaran</label>
+                            <input type="date" name="tanggal_selesai_daftar" class="w-full border rounded px-3 py-2"
+                                value="{{ old('tanggal_selesai_daftar') }}" required>
+                            @error('tanggal_selesai_daftar')
+                                <p class="text-red-600 text-sm">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-1">Tanggal Mulai Kegiatan</label>
+                            <input type="date" name="tanggal_mulai_kegiatan"
+                                class="w-full border rounded px-3 py-2" value="{{ old('tanggal_mulai_kegiatan') }}"
+                                required>
+                            @error('tanggal_mulai_kegiatan')
+                                <p class="text-red-600 text-sm">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-1">Tanggal Selesai Kegiatan</label>
+                            <input type="date" name="tanggal_selesai_kegiatan"
+                                class="w-full border rounded px-3 py-2" value="{{ old('tanggal_selesai_kegiatan') }}"
+                                required>
+                            @error('tanggal_selesai_kegiatan')
+                                <p class="text-red-600 text-sm">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
                 </div>
 

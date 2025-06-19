@@ -213,25 +213,6 @@ class DonasiController extends Controller
         return view('donasi.public-detail', compact('donasi', 'progressPercentage'));
     }
 
-    public function welcome()
-    {
-        $openDonations = Donasi::where('status', 'open')
-            ->whereDate('tanggal_selesai', '>=', now())
-            ->latest()
-            ->take(6) // Limit to 6 most recent donations
-            ->get();
-
-        // Calculate percentage progress for each donation
-        foreach ($openDonations as $donasi) {
-            $donasi->progressPercentage = 0;
-            if ($donasi->target_dana > 0) {
-                $donasi->progressPercentage = min(100, ($donasi->dana_terkumpul / $donasi->target_dana) * 100);
-            }
-        }
-
-        return view('welcome', compact('openDonations'));
-    }
-
     public function showdonasi($id)
     {
         $donasi = Donasi::findOrFail($id);

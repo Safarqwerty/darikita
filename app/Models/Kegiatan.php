@@ -4,38 +4,46 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Kegiatan extends Model
 {
     use HasFactory;
 
-    protected $table = 'kegiatans';
-
     protected $fillable = [
-        'judul',
+        'nama_kegiatan',
         'jenis_kegiatan',
-        'lokasi',
-        'lokasi_kegiatan',
+        'deskripsi_kegiatan',
+        'syarat_ketentuan',
+        'provinsi',
+        'kabupaten_kota',
+        'kecamatan',
+        'kelurahan_desa',
         'batas_pendaftar',
+        'gambar_sampul',
         'gambar_lokasi',
-        'tanggal_mulai',
-        'tanggal_selesai',
+        'tanggal_mulai_daftar',
+        'tanggal_selesai_daftar',
+        'tanggal_mulai_kegiatan',
+        'tanggal_selesai_kegiatan',
         'status',
         'created_by',
     ];
 
     protected $casts = [
-        'tanggal_mulai' => 'date',
-        'tanggal_selesai' => 'date',
+        'gambar_lokasi' => 'array', // This will automatically handle JSON conversion
+        'tanggal_mulai_daftar' => 'date',
+        'tanggal_selesai_daftar' => 'date',
+        'tanggal_mulai_kegiatan' => 'date',
+        'tanggal_selesai_kegiatan' => 'date',
     ];
 
-    // Relasi: Kegiatan dibuat oleh User (admin)
-    public function creator()
+    public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    // Relasi: Kegiatan memiliki banyak pendaftar
     public function pendaftar()
     {
         return $this->hasMany(DaftarKegiatan::class);

@@ -100,7 +100,7 @@ class DashboardController extends Controller
         // Get user's registrations
         $totalRegistrations = DaftarKegiatan::where('user_id', $userId)->count();
         $approvedRegistrations = DaftarKegiatan::where('user_id', $userId)
-            ->where('status', 'approved')
+            ->where('status', 'diterima') // Changed from 'approved' to 'diterima' to match your blade template
             ->count();
         $latestRegistrations = DaftarKegiatan::with('kegiatan')
             ->where('user_id', $userId)
@@ -108,24 +108,28 @@ class DashboardController extends Controller
             ->take(3)
             ->get();
 
-        // Get active events and donations for recommendations
+        // Get active events for recommendations
         $activeEvents = Kegiatan::where('status', 'publish')
-            ->withCount('pendaftar')
-            ->whereDate('tanggal_selesai', '>=', now())
+            ->withCount(['pendaftar' => function($query) {
+                // If you have a relationship named 'pendaftar', otherwise use 'daftarKegiatan'
+                // $query->where('status', 'diterima'); // Optional: only count approved registrations
+            }])
+            ->whereDate('tanggal_selesai_kegiatan', '>=', now())
             ->latest()
             ->get();
 
+        // Get active donations for recommendations
+        // Fixed: Donasi table likely doesn't have 'tanggal_selesai_kegiatan' column
         $activeDonations = Donasi::where('status', 'aktif')
-            ->whereDate('tanggal_selesai', '>=', now())
+            ->whereDate('tanggal_selesai', '>=', now()) // Changed column name
             ->latest()
             ->get();
-        
+
+        // Get user's registered activities
         $registrationActivities = DaftarKegiatan::where('user_id', $userId)
             ->with('kegiatan')
-            ->latest()
+            ->latest('tanggal_daftar') // Added specific column for ordering
             ->get();
-        
-            // dd($registrationActivities);
 
         return view('dashboard', compact(
             'totalDonations', 'totalDonated', 'latestDonations',

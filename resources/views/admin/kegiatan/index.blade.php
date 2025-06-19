@@ -21,12 +21,11 @@
                     <tr>
                         <th class="px-6 py-3">Nama Kegiatan</th>
                         <th class="px-6 py-3">Jenis</th>
-                        <th class="px-6 py-3">Lokasi Umum</th>
-                        <th class="px-6 py-3">Alamat Lengkap</th>
-                        <th class="px-6 py-3">Gambar</th>
+                        <th class="px-6 py-3">Lokasi</th>
+                        <th class="px-6 py-3">Gambar Sampul</th>
                         <th class="px-6 py-3">Kuota</th>
-                        <th class="px-6 py-3">Tanggal Mulai</th>
-                        <th class="px-6 py-3">Tanggal Selesai</th>
+                        <th class="px-6 py-3">Pendaftaran</th>
+                        <th class="px-6 py-3">Pelaksanaan</th>
                         <th class="px-6 py-3">Status</th>
                         <th class="px-6 py-3">Admin</th>
                         <th class="px-6 py-3">Aksi</th>
@@ -35,23 +34,61 @@
                 <tbody>
                     @forelse($kegiatans as $kegiatan)
                         <tr class="border-b hover:bg-gray-50">
-                            <td class="px-6 py-4">{{ $kegiatan->judul }}</td>
-                            <td class="px-6 py-4">{{ $kegiatan->jenis_kegiatan }}</td>
-                            <td class="px-6 py-4">{{ $kegiatan->lokasi }}</td>
-                            <td class="px-6 py-4">{{ $kegiatan->lokasi_kegiatan }}</td>
                             <td class="px-6 py-4">
-                                @if ($kegiatan->gambar_lokasi)
-                                    <img src="{{ asset('storage/' . $kegiatan->gambar_lokasi) }}" alt="Gambar Lokasi"
+                                <div class="font-medium">{{ $kegiatan->nama_kegiatan }}</div>
+                                <div class="text-xs text-gray-500 mt-1">
+                                    {{ Str::limit($kegiatan->deskripsi_kegiatan, 50) }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
+                                    {{ ucfirst($kegiatan->jenis_kegiatan) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm">
+                                    <div class="font-medium">{{ $kegiatan->kabupaten_kota }}</div>
+                                    <div class="text-xs text-gray-500">{{ $kegiatan->provinsi }}</div>
+                                    <div class="text-xs text-gray-400">
+                                        {{ $kegiatan->kecamatan }}, {{ $kegiatan->kelurahan_desa }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                @if ($kegiatan->gambar_sampul)
+                                    <img src="{{ asset('storage/' . $kegiatan->gambar_sampul) }}" alt="Gambar Sampul"
                                         class="w-20 h-16 object-cover rounded">
                                 @else
-                                    <span class="text-gray-400 italic">Tidak ada</span>
+                                    <span class="text-gray-400 italic text-xs">Tidak ada</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4">{{ $kegiatan->batas_pendaftar ?? 'Tak terbatas' }}</td>
-                            <td class="px-6 py-4">{{ \Carbon\Carbon::parse($kegiatan->tanggal_mulai)->format('d M Y') }}
+                            <td class="px-6 py-4">
+                                {{ $kegiatan->batas_pendaftar ?? 'Tak terbatas' }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ \Carbon\Carbon::parse($kegiatan->tanggal_selesai)->format('d M Y') }}</td>
+                                <div class="text-xs">
+                                    <div class="text-gray-600">Mulai:</div>
+                                    <div class="font-medium">
+                                        {{ \Carbon\Carbon::parse($kegiatan->tanggal_mulai_daftar)->format('d M Y') }}
+                                    </div>
+                                    <div class="text-gray-600 mt-1">Selesai:</div>
+                                    <div class="font-medium">
+                                        {{ \Carbon\Carbon::parse($kegiatan->tanggal_selesai_daftar)->format('d M Y') }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-xs">
+                                    <div class="text-gray-600">Mulai:</div>
+                                    <div class="font-medium">
+                                        {{ \Carbon\Carbon::parse($kegiatan->tanggal_mulai_kegiatan)->format('d M Y') }}
+                                    </div>
+                                    <div class="text-gray-600 mt-1">Selesai:</div>
+                                    <div class="font-medium">
+                                        {{ \Carbon\Carbon::parse($kegiatan->tanggal_selesai_kegiatan)->format('d M Y') }}
+                                    </div>
+                                </div>
+                            </td>
                             <td class="px-6 py-4">
                                 <span
                                     class="inline-block px-2 py-1 text-xs font-semibold rounded
@@ -61,30 +98,33 @@
                                     {{ ucfirst($kegiatan->status) }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4">{{ $kegiatan->creator->name ?? '-' }}</td>
-                            <td class="px-6 py-4 space-x-2">
-                                {{-- Aksi --}}
-                                @can('manage kegiatans')
-                                    <a href="{{ route('kegiatan.edit', $kegiatan->id) }}"
-                                        class="text-blue-600 hover:underline">Edit</a>
-                                    <form action="{{ route('kegiatan.destroy', $kegiatan->id) }}" method="POST"
-                                        class="inline" onsubmit="return confirm('Yakin hapus kegiatan ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:underline">Hapus</button>
-                                    </form>
-                                @elsecan('kegiatan.register')
-                                    <form action="{{ route('kegiatan.daftar', $kegiatan->id) }}" method="POST">
-                                        @csrf
-                                        <button type="submit"
-                                            class="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700">Daftar</button>
-                                    </form>
-                                @endcan
+                            <td class="px-6 py-4">
+                                {{ $kegiatan->creator->name ?? '-' }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-col space-y-2">
+                                    {{-- Detail Button --}}
+                                    <a href="{{ route('kegiatan.show', $kegiatan->id) }}"
+                                        class="text-indigo-600 hover:underline text-xs">Detail</a>
+
+                                    {{-- Aksi untuk Admin --}}
+                                    @can('manage kegiatans')
+                                        <a href="{{ route('kegiatan.edit', $kegiatan->id) }}"
+                                            class="text-blue-600 hover:underline text-xs">Edit</a>
+                                        <form action="{{ route('kegiatan.destroy', $kegiatan->id) }}" method="POST"
+                                            class="inline" onsubmit="return confirm('Yakin hapus kegiatan ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="text-red-600 hover:underline text-xs">Hapus</button>
+                                        </form>
+                                    @endcan
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="11" class="px-6 py-4 text-center text-gray-500">Belum ada kegiatan.</td>
+                            <td colspan="10" class="px-6 py-4 text-center text-gray-500">Belum ada kegiatan.</td>
                         </tr>
                     @endforelse
                 </tbody>
