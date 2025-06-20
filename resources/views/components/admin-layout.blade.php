@@ -19,7 +19,9 @@
                 @foreach (config('sidebar') as $sidebar)
                     <ul>
                         <li class="px-6 py-2 hover:bg-gray-200">
-                            <a href="{{ route($sidebar['route']) }}">{{ $sidebar['title'] }}</a>
+                            <a href="{{ isset($sidebar['route']) && $sidebar['route'] ? route($sidebar['route']) : '#' }}">
+                                {{ $sidebar['title'] }}
+                            </a>
                         </li>
                     </ul>
                 @endforeach

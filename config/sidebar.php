@@ -23,6 +23,6 @@ return [
   ],
   [
     'title' => 'Manajemen User',
-    'route' => 'users.index'
+    'route' => ''
   ],
 ];
