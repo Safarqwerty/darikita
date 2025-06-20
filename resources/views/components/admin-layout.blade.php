@@ -16,26 +16,13 @@
                 <h1>Darikita</h1>
             </div>
             <nav class="mt-6">
-                <ul>
-                    <li class="px-6 py-2 hover:bg-gray-200">
-                        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                    </li>
-                    <li class="px-6 py-2 hover:bg-gray-200">
-                        <a href="{{ route('kegiatan.index') }}">Kegiatan</a>
-                    </li>
-                    <li class="px-6 py-2 hover:bg-gray-200">
-                        <a href="{{ route('donasi.index') }}">Donasi</a>
-                    </li>
-                    <li class="px-6 py-2 hover:bg-gray-200">
-                        <a href="{{ route('pemberi-donasi.index') }}">Pemberi Donasi</a>
-                    </li>
-                    <li class="px-6 py-2 hover:bg-gray-200">
-                        <a href="{{ route('pendaftaran.index') }}">Pendaftaran</a>
-                    </li>
-                    <li class="px-6 py-2 hover:bg-gray-200">
-                        <a href="{{ route('users.index') }}">Manajemen User</a>
-                    </li>
-                </ul>
+                @foreach (config('sidebar') as $sidebar)
+                    <ul>
+                        <li class="px-6 py-2 hover:bg-gray-200">
+                            <a href="{{ route($sidebar['route']) }}">{{ $sidebar['title'] }}</a>
+                        </li>
+                    </ul>
+                @endforeach
             </nav>
         </aside>
 
