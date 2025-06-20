@@ -16,7 +16,7 @@
                 <h1>Darikita</h1>
             </div>
             <nav class="mt-6">
-                @foreach (config('sidebar') as $sidebar)
+                @foreach (config('admin-sidebar') as $sidebar)
                     <ul>
                         <li class="px-6 py-2 hover:bg-gray-200">
                             <a href="{{ isset($sidebar['route']) && $sidebar['route'] ? route($sidebar['route']) : '#' }}">
