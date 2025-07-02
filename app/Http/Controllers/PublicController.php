@@ -188,19 +188,23 @@ class PublicController extends Controller
 
         try {
             // Upload bukti follow menggunakan Laravel Storage
-            $buktiFollowPath = null;
-            if ($request->hasFile('bukti_follow')) {
-                $buktiFollowPath = $request->file('bukti_follow')->store('bukti_follow', 'public');
+            // Upload bukti follow
+            if ($request->file('bukti_follow')) {
+                $file = $request->file('bukti_follow');
+                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('storage/bukti_follow'), $filename);
+                $data['bukti_follow'] = 'bukti_follow/' . $filename;
             }
-
-            // Upload bukti repost menggunakan Laravel Storage
-            $buktiRepostPath = null;
-            if ($request->hasFile('bukti_repost')) {
-                $buktiRepostPath = $request->file('bukti_repost')->store('bukti_repost', 'public');
+            // Upload bukti repost
+            if ($request->file('bukti_repost')) {
+                $file = $request->file('bukti_repost');
+                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('storage/bukti_repost'), $filename);
+                $data['bukti_repost'] = 'bukti_repost/' . $filename;
             }
 
             // Pastikan kedua file berhasil diupload
-            if (!$buktiFollowPath || !$buktiRepostPath) {
+            if (!$data['bukti_follow'] || !$data['bukti_repost']) {
                 return redirect()->back()
                     ->with('error', 'Gagal mengupload file. Silakan coba lagi.')
                     ->withInput();
@@ -218,8 +222,8 @@ class PublicController extends Controller
                 'jenis_kendaraan' => $request->jenis_kendaraan,
                 'merk_kendaraan' => $request->merk_kendaraan,
                 'siap_kontribusi' => (bool) $request->siap_kontribusi, // Convert to boolean
-                'bukti_follow' => $buktiFollowPath,
-                'bukti_repost' => $buktiRepostPath,
+                'bukti_follow' => $data['bukti_follow'] ?? null,
+                'bukti_repost' => $data['bukti_repost'] ?? null,
             ];
 
             // Debug data (hapus pada production)

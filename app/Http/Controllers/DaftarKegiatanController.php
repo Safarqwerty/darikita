@@ -86,10 +86,19 @@ class DaftarKegiatanController extends Controller
         ]);
 
         // Upload bukti follow
-        $buktiFollowPath = $request->file('bukti_follow')->store('bukti_follow', 'public');
-
+        if ($request->file('bukti_follow')) {
+            $file = $request->file('bukti_follow');
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('storage/bukti_follow'), $filename);
+            $data['bukti_follow'] = 'bukti_follow/' . $filename;
+        }
         // Upload bukti repost
-        $buktiRepostPath = $request->file('bukti_repost')->store('bukti_repost', 'public');
+        if ($request->file('bukti_repost')) {
+            $file = $request->file('bukti_repost');
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('storage/bukti_repost'), $filename);
+            $data['bukti_repost'] = 'bukti_repost/' . $filename;
+        }
 
         DaftarKegiatan::create([
             'user_id' => Auth::id(),
@@ -102,8 +111,8 @@ class DaftarKegiatanController extends Controller
             'jenis_kendaraan' => $request->jenis_kendaraan,
             'merk_kendaraan' => $request->merk_kendaraan,
             'siap_kontribusi' => $request->siap_kontribusi,
-            'bukti_follow' => $buktiFollowPath,
-            'bukti_repost' => $buktiRepostPath,
+            'bukti_follow' => $data['bukti_follow'] ?? null,
+            'bukti_repost' => $data['bukti_repost'] ?? null,
         ]);
 
         return redirect()->route('daftar-kegiatan.index')
