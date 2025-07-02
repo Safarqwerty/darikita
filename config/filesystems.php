@@ -72,6 +72,8 @@ return [
     'links' => [
         public_path('storage') => storage_path('app/public'),
         public_path('storage/kegiatan') => storage_path('app/kegiatan'),
+        public_path('storage/kegiatan/sampul') => storage_path('app/kegiatan/sampul'),
+        public_path('storage/kegiatan/lokasi') => storage_path('app/kegiatan/lokasi'),
         public_path('storage/donasi') => storage_path('app/donasi'),
         public_path('storage/bukti_follow') => storage_path('app/bukti_follow'),
         public_path('storage/bukti_donasi') => storage_path('app/bukti_donasi'),

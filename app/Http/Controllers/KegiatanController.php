@@ -62,17 +62,32 @@ class KegiatanController extends Controller
 
         // Handle gambar sampul upload
         if ($request->hasFile('gambar_sampul')) {
-            $data['gambar_sampul'] = $request->file('gambar_sampul')->store('kegiatan/sampul', 'public');
+            // $data['gambar_sampul'] = $request->file('gambar_sampul')->store('kegiatan/sampul', 'public');
+        }
+
+        if ($request->file('gambar_sampul')) {
+            $file = $request->file('gambar_sampul');
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('storage/kegiatan/sampul'), $filename);
+            $data['gambar_sampul'] = 'kegiatan/sampul/' . $filename;
+        }
+
+        if ($request->file('gambar_lokasi')) {
+            foreach ($request->file('gambar_lokasi') as $file) {
+                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('storage/kegiatan/lokasi'), $filename);
+                $data['gambar_lokasi'] = 'kegiatan/lokasi/' . $filename;
+            }
         }
 
         // Handle multiple gambar lokasi upload
-        if ($request->hasFile('gambar_lokasi')) {
-            $gambarLokasiPaths = [];
-            foreach ($request->file('gambar_lokasi') as $file) {
-                $gambarLokasiPaths[] = $file->store('kegiatan/lokasi', 'public');
-            }
-            $data['gambar_lokasi'] = $gambarLokasiPaths;
-        }
+        // if ($request->hasFile('gambar_lokasi')) {
+        //     $gambarLokasiPaths = [];
+        //     foreach ($request->file('gambar_lokasi') as $file) {
+        //         $gambarLokasiPaths[] = $file->store('kegiatan/lokasi', 'public');
+        //     }
+        //     $data['gambar_lokasi'] = $gambarLokasiPaths;
+        // }
 
         $data['created_by'] = Auth::id();
 
