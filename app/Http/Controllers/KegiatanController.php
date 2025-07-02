@@ -76,8 +76,9 @@ class KegiatanController extends Controller
             foreach ($request->file('gambar_lokasi') as $file) {
                 $filename = uniqid() . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('storage/kegiatan/lokasi'), $filename);
-                $data['gambar_lokasi'] = 'kegiatan/lokasi/' . $filename;
+                $filenames[] = 'kegiatan/lokasi/' . $filename;
             }
+            $data['gambar_lokasi'] = json_encode($filenames);
         }
 
         // Handle multiple gambar lokasi upload
