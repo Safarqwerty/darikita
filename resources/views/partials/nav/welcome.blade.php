@@ -43,7 +43,7 @@
                         class="flex items-center space-x-2 text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 p-0.5"
                         id="user-menu-button">
                         <img class="w-8 h-8 rounded-full"
-                            src="{{ Auth::user()->avatar ?? '/docs/images/people/profile-picture-3.jpg' }}"
+                            src="{{ Auth::user()->avatar ?? 'https://ui-avatars.com/api/?name=User' }}"
                             alt="Profile">
                     </button>
 
@@ -122,7 +122,7 @@
                     <div class="space-y-2">
                         <div class="flex items-center px-3 py-2 space-x-3">
                             <img class="w-8 h-8 rounded-full"
-                                src="{{ Auth::user()->avatar ?? '/docs/images/people/profile-picture-3.jpg' }}"
+                                src="{{ Auth::user()->avatar ?? 'https://ui-avatars.com/api/?name=User' }}"
                                 alt="Profile">
                             <div>
                                 <p class="text-sm font-medium text-gray-900">{{ Auth::user()->name ?? 'User' }}</p>
