@@ -13,7 +13,7 @@
                 @foreach (config('welcome-navbar') as $nav)
                     <li>
                         <a href="{{ $nav['route'] }}"
-                            class="@if(url($nav['route']) == url()->current()) text-blue-600 @else text-grey-700 @endif font-medium hover:text-blue-800 transition-colors duration-200">
+                            class="@if (url($nav['route']) == url()->current()) text-blue-600 @else text-grey-700 @endif font-medium hover:text-blue-800 transition-colors duration-200">
                             {{ $nav['title'] }}
                         </a>
                     </li>
@@ -42,8 +42,8 @@
                     <button type="button"
                         class="flex items-center space-x-2 text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 p-0.5"
                         id="user-menu-button">
-                        <img class="w-8 h-8 rounded-full"
-                            src="{{ Auth::user()->avatar ?? 'https://ui-avatars.com/api/?name=User' }}"
+                        <img class="w-8 h-8 rounded-full object-cover"
+                            src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) }}"
                             alt="Profile">
                     </button>
 
@@ -98,11 +98,11 @@
         <div class="px-4 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
             @foreach (config('welcome-navbar') as $nav)
                 <a href="{{ $nav['route'] }}"
-                    class="@if(url($nav['route']) == url()->current()) text-blue-600 @else text-grey-700 @endif block px-3 py-2 rounded-md font-medium hover:text-blue-800 transition-colors duration-200">
+                    class="@if (url($nav['route']) == url()->current()) text-blue-600 @else text-grey-700 @endif block px-3 py-2 rounded-md font-medium hover:text-blue-800 transition-colors duration-200">
                     {{ $nav['title'] }}
                 </a>
             @endforeach
-            
+
             <!-- Auth Section -->
             <div class="pt-4 border-t border-gray-200">
                 @guest
@@ -122,8 +122,7 @@
                     <div class="space-y-2">
                         <div class="flex items-center px-3 py-2 space-x-3">
                             <img class="w-8 h-8 rounded-full"
-                                src="{{ Auth::user()->avatar ?? 'https://ui-avatars.com/api/?name=User' }}"
-                                alt="Profile">
+                                src="{{ Auth::user()->avatar ?? 'https://ui-avatars.com/api/?name=User' }}" alt="Profile">
                             <div>
                                 <p class="text-sm font-medium text-gray-900">{{ Auth::user()->name ?? 'User' }}</p>
                                 <p class="text-xs text-gray-500">{{ Auth::user()->email ?? 'user@example.com' }}</p>
@@ -134,8 +133,8 @@
                             <svg class="mr-3 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 21l4-7 4 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 21l4-7 4 7">
+                                </path>
                             </svg>
                             Dashboard
                         </a>

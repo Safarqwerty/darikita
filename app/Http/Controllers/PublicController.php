@@ -105,13 +105,18 @@ class PublicController extends Controller
 
         // Filter berdasarkan pencarian
         if ($request->has('search') && $request->search) {
-            $query->where('judul', 'like', '%' . $request->search . '%')
-                  ->orWhere('deskripsi', 'like', '%' . $request->search . '%');
+            $query->where('nama_donasi', 'like', '%' . $request->search . '%')
+                ->orWhere('deskripsi', 'like', '%' . $request->search . '%');
         }
 
-        // Filter berdasarkan kategori jika ada
-        if ($request->has('kategori') && $request->kategori) {
-            $query->where('kategori', $request->kategori);
+        // Filter berdasarkan jenis donasi
+        if ($request->has('jenis_donasi') && $request->jenis_donasi) {
+            $query->where('jenis_donasi', $request->jenis_donasi);
+        }
+
+        // Filter berdasarkan status
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
         }
 
         $donasis = $query->latest()->paginate(12);
@@ -124,7 +129,14 @@ class PublicController extends Controller
             }
         }
 
-        return view('public.donasi.index', compact('donasis'));
+        // Get unique jenis_donasi options for the filter dropdown
+        $jenisDonasiOptions = Donasi::distinct()
+            ->pluck('jenis_donasi')
+            ->filter() // Remove empty/null values
+            ->sort()
+            ->values();
+
+        return view('public.donasi.index', compact('donasis', 'jenisDonasiOptions'));
     }
 
     /**
@@ -134,7 +146,30 @@ class PublicController extends Controller
     {
         $kegiatan = Kegiatan::findOrFail($id);
 
-        // Ambil kegiatan terkait lainnya
+        // Debug: cek struktur data gambar
+        \Log::info('Data kegiatan:', [
+            'id' => $kegiatan->id,
+            'nama' => $kegiatan->nama_kegiatan,
+            'gambar_lokasi' => $kegiatan->gambar_lokasi,
+            'gambar_lokasi_type' => gettype($kegiatan->gambar_lokasi),
+            'gambar_lokasi_count' => is_array($kegiatan->gambar_lokasi) ? count($kegiatan->gambar_lokasi) : 'not array'
+        ]);
+
+        // Cek apakah file gambar benar-benar ada
+        if ($kegiatan->gambar_lokasi && is_array($kegiatan->gambar_lokasi)) {
+            foreach ($kegiatan->gambar_lokasi as $index => $gambar) {
+                $fullPath = storage_path('app/public/' . $gambar);
+                $publicPath = public_path('storage/' . $gambar);
+                \Log::info("Gambar {$index}:", [
+                    'path' => $gambar,
+                    'storage_exists' => file_exists($fullPath),
+                    'public_exists' => file_exists($publicPath),
+                    'full_path' => $fullPath,
+                    'public_path' => $publicPath
+                ]);
+            }
+        }
+
         $relatedKegiatans = Kegiatan::where('status', 'publish')
             ->where('id', '!=', $id)
             ->latest()

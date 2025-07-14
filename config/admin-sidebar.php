@@ -21,8 +21,4 @@ return [
     'title' => 'Pendaftaran',
     'route' => 'pendaftaran.index'
   ],
-  [
-    'title' => 'Manajemen User',
-    'route' => ''
-  ],
 ];

@@ -1,6 +1,6 @@
 <x-admin-layout>
     <x-slot name="header">
-        Edit Donasi Bencana
+        Edit Program Donasi
     </x-slot>
 
     <div class="py-4">
@@ -10,10 +10,19 @@
             @method('PUT')
 
             <div>
-                <label class="block font-medium text-sm text-gray-700">Nama Bencana</label>
-                <input type="text" name="nama_bencana" class="mt-1 block w-full border-gray-300 rounded shadow-sm"
-                    value="{{ old('nama_bencana', $donasi->nama_bencana) }}" required>
-                @error('nama_bencana')
+                <label class="block font-medium text-sm text-gray-700">Nama Donasi</label>
+                <input type="text" name="nama_donasi" class="mt-1 block w-full border-gray-300 rounded shadow-sm"
+                    value="{{ old('nama_donasi', $donasi->nama_donasi) }}" required>
+                @error('nama_donasi')
+                    <p class="text-red-600 text-sm">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label class="block font-medium text-sm text-gray-700">Jenis Donasi</label>
+                <input type="text" name="jenis_donasi" class="mt-1 block w-full border-gray-300 rounded shadow-sm"
+                    value="{{ old('jenis_donasi', $donasi->jenis_donasi) }}" required>
+                @error('jenis_donasi')
                     <p class="text-red-600 text-sm">{{ $message }}</p>
                 @enderror
             </div>
@@ -32,15 +41,6 @@
                     <input type="number" name="target_dana" class="mt-1 block w-full border-gray-300 rounded shadow-sm"
                         value="{{ old('target_dana', $donasi->target_dana) }}" required>
                     @error('target_dana')
-                        <p class="text-red-600 text-sm">{{ $message }}</p>
-                    @enderror
-                </div>
-                <div>
-                    <label class="block font-medium text-sm text-gray-700">Dana Terkumpul</label>
-                    <input type="number" name="dana_terkumpul"
-                        class="mt-1 block w-full border-gray-300 rounded shadow-sm"
-                        value="{{ old('dana_terkumpul', $donasi->dana_terkumpul) }}">
-                    @error('dana_terkumpul')
                         <p class="text-red-600 text-sm">{{ $message }}</p>
                     @enderror
                 </div>
@@ -70,10 +70,8 @@
             <div>
                 <label class="block font-medium text-sm text-gray-700">Status</label>
                 <select name="status" class="mt-1 block w-full border-gray-300 rounded shadow-sm">
-                    <option value="open" {{ old('status', $donasi->status) == 'open' ? 'selected' : '' }}>Open
-                    </option>
-                    <option value="closed" {{ old('status', $donasi->status) == 'closed' ? 'selected' : '' }}>Closed
-                    </option>
+                    <option value="open" @selected(old('status', $donasi->status) == 'open')>Open</option>
+                    <option value="closed" @selected(old('status', $donasi->status) == 'closed')>Closed</option>
                 </select>
                 @error('status')
                     <p class="text-red-600 text-sm">{{ $message }}</p>

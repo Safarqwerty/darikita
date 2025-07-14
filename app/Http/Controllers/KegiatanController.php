@@ -62,33 +62,17 @@ class KegiatanController extends Controller
 
         // Handle gambar sampul upload
         if ($request->hasFile('gambar_sampul')) {
-            // $data['gambar_sampul'] = $request->file('gambar_sampul')->store('kegiatan/sampul', 'public');
-        }
-
-        if ($request->file('gambar_sampul')) {
-            $file = $request->file('gambar_sampul');
-            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('storage/kegiatan/sampul'), $filename);
-            $data['gambar_sampul'] = 'kegiatan/sampul/' . $filename;
-        }
-
-        if ($request->file('gambar_lokasi')) {
-            foreach ($request->file('gambar_lokasi') as $file) {
-                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('storage/kegiatan/lokasi'), $filename);
-                $filenames[] = 'kegiatan/lokasi/' . $filename;
-            }
-            $data['gambar_lokasi'] = json_encode($filenames);
+            $data['gambar_sampul'] = $request->file('gambar_sampul')->store('kegiatan/sampul', 'public');
         }
 
         // Handle multiple gambar lokasi upload
-        // if ($request->hasFile('gambar_lokasi')) {
-        //     $gambarLokasiPaths = [];
-        //     foreach ($request->file('gambar_lokasi') as $file) {
-        //         $gambarLokasiPaths[] = $file->store('kegiatan/lokasi', 'public');
-        //     }
-        //     $data['gambar_lokasi'] = $gambarLokasiPaths;
-        // }
+        if ($request->hasFile('gambar_lokasi')) {
+            $gambarLokasiPaths = [];
+            foreach ($request->file('gambar_lokasi') as $file) {
+                $gambarLokasiPaths[] = $file->store('kegiatan/lokasi', 'public');
+            }
+            $data['gambar_lokasi'] = $gambarLokasiPaths; // Laravel akan otomatis convert ke JSON karena cast 'array'
+        }
 
         $data['created_by'] = Auth::id();
 
@@ -160,7 +144,7 @@ class KegiatanController extends Controller
 
         // Handle multiple gambar lokasi upload
         if ($request->hasFile('gambar_lokasi')) {
-            // Delete old gambar lokasi if exists (with safety check)
+            // Delete old gambar lokasi if exists
             if ($kegiatan->gambar_lokasi && is_array($kegiatan->gambar_lokasi)) {
                 foreach ($kegiatan->gambar_lokasi as $oldImage) {
                     Storage::disk('public')->delete($oldImage);
@@ -171,7 +155,7 @@ class KegiatanController extends Controller
             foreach ($request->file('gambar_lokasi') as $file) {
                 $gambarLokasiPaths[] = $file->store('kegiatan/lokasi', 'public');
             }
-            $data['gambar_lokasi'] = $gambarLokasiPaths;
+            $data['gambar_lokasi'] = $gambarLokasiPaths; // Laravel akan otomatis convert ke JSON
         }
 
         $kegiatan->update($data);

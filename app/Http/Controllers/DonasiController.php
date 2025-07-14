@@ -62,7 +62,8 @@ class DonasiController extends Controller
         $gambarPath = $request->file('gambar')->store('donasi', 'public');
 
         Donasi::create([
-            'nama_bencana' => $request->nama_bencana,
+            'nama_donasi' => $request->nama_donasi,
+            'jenis_donasi' => $request->jenis_donasi,
             'deskripsi' => $request->deskripsi,
             'target_dana' => $request->target_dana,
             'dana_terkumpul' => 0, // Default 0
@@ -119,7 +120,8 @@ class DonasiController extends Controller
         }
 
         $request->validate([
-            'nama_bencana' => 'required|string|max:255',
+            'nama_donasi' => 'required|string|max:255',
+            'jenis_donasi' => 'required|string|max:50',
             'deskripsi' => 'required|string',
             'target_dana' => 'required|numeric|min:' . $donasi->dana_terkumpul, // Cannot be less than collected
             'tanggal_mulai' => 'required|date',
@@ -129,7 +131,8 @@ class DonasiController extends Controller
         ]);
 
         $data = [
-            'nama_bencana' => $request->nama_bencana,
+            'nama_donasi' => $request->nama_donasi,
+            'jenis_donasi' => $request->jenis_donasi,
             'deskripsi' => $request->deskripsi,
             'target_dana' => $request->target_dana,
             'tanggal_mulai' => $request->tanggal_mulai,

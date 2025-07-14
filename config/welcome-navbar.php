@@ -7,11 +7,11 @@ return [
   ],
   [
     'title' => 'Kegiatan',
-    'route' => '#program',
+    'route' => '/kegiatan',
   ],
   [
-    'title' => 'Impact',
-    'route' => '#impact'
+    'title' => 'Donasi',
+    'route' => '/donasi'
   ],
   [
     'title' => 'Testimoni',

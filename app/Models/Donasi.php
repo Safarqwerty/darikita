@@ -10,7 +10,8 @@ class Donasi extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nama_bencana',
+        'nama_donasi',
+        'jenis_donasi',
         'deskripsi',
         'target_dana',
         'dana_terkumpul',

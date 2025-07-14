@@ -8,25 +8,27 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    {{-- Jika Anda memiliki file CSS kustom, pastikan path-nya benar --}}
     <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
 </head>
 
 <body>
     @include('partials.nav.welcome')
 
-    <!-- Hero Section yang Sudah Diperbaiki -->
+    <!-- Hero Section -->
     <section class="hero-pattern pt-20 pb-16 w-full overflow-hidden">
-        <div class="container mx-auto px-4">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col lg:flex-row items-center">
-                <div class="lg:w-1/2 mb-10 lg:mb-0 px-4 pl-32" data-aos="fade-right">
+                {{-- Padding diubah untuk layar besar --}}
+                <div class="lg:w-1/2 text-center lg:text-left mb-10 lg:mb-0 lg:pl-32" data-aos="fade-right">
                     <h1 class="text-4xl md:text-5xl font-bold text-gray-800 leading-tight mb-6">
                         Jadilah Bagian dari <span class="text-blue-600">Perubahan</span> di Indonesia
                     </h1>
-                    <p class="text-lg text-gray-600 mb-8 max-w-lg">
+                    <p class="text-lg text-gray-600 mb-8 max-w-lg mx-auto lg:mx-0">
                         Bersama kita bisa membantu pendidikan & respon bencana di seluruh Indonesia.
                         Satu langkah kecilmu, dampak besar bagi mereka.
                     </p>
-                    <div class="flex flex-wrap gap-4">
+                    <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
                         <a href="{{ route('register') }}"
                             class="btn-primary px-8 py-3 text-white rounded-xl font-medium">
                             Mulai Bergerak
@@ -38,10 +40,14 @@
                         </a>
                     </div>
                 </div>
-                <div class="lg:w-1/2 px-4" data-aos="fade-left">
-                    <div class="relative">
-                        <div class="absolute -top-6 -left-6 w-24 h-24 bg-blue-100 rounded-full opacity-70"></div>
-                        <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-blue-100 rounded-full opacity-70"></div>
+                <div class="lg:w-1/2" data-aos="fade-left">
+                    <div class="relative px-4">
+                        <div
+                            class="absolute -top-6 -left-0 w-24 h-24 bg-blue-100 rounded-full opacity-70 hidden lg:block">
+                        </div>
+                        <div
+                            class="absolute -bottom-6 -right-0 w-32 h-32 bg-blue-100 rounded-full opacity-70 hidden lg:block">
+                        </div>
                         <img src="https://blog.maukuliah.id/wp-content/uploads/2023/07/relawan.jpg"
                             alt="Relawan di Indonesia"
                             class="relative z-10 rounded-2xl shadow-xl mx-auto w-full max-w-lg">
@@ -53,240 +59,138 @@
 
     <!-- Stats Section -->
     <section class="py-16 bg-white">
-        <div class="container mx-auto px-4">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-                <div class="stats-item p-6" data-aos="fade-up" data-aos-delay="100">
-                    <p class="text-4xl font-bold impact-number mb-2">2,500+</p>
+                <div class="stats-item p-4" data-aos="fade-up" data-aos-delay="100">
+                    <p class="text-3xl md:text-4xl font-bold text-blue-600 mb-2">2,500+</p>
                     <p class="text-gray-600 font-medium">Relawan Aktif</p>
                 </div>
-                <div class="stats-item p-6" data-aos="fade-up" data-aos-delay="200">
-                    <p class="text-4xl font-bold impact-number mb-2">150+</p>
+                <div class="stats-item p-4" data-aos="fade-up" data-aos-delay="200">
+                    <p class="text-3xl md:text-4xl font-bold text-blue-600 mb-2">150+</p>
                     <p class="text-gray-600 font-medium">Program Selesai</p>
                 </div>
-                <div class="stats-item p-6" data-aos="fade-up" data-aos-delay="300">
-                    <p class="text-4xl font-bold impact-number mb-2">34</p>
+                <div class="stats-item p-4" data-aos="fade-up" data-aos-delay="300">
+                    <p class="text-3xl md:text-4xl font-bold text-blue-600 mb-2">34</p>
                     <p class="text-gray-600 font-medium">Provinsi Terjangkau</p>
                 </div>
-                <div class="stats-item p-6" data-aos="fade-up" data-aos-delay="400">
-                    <p class="text-4xl font-bold impact-number mb-2">50,000+</p>
+                <div class="stats-item p-4" data-aos="fade-up" data-aos-delay="400">
+                    <p class="text-3xl md:text-4xl font-bold text-blue-600 mb-2">50,000+</p>
                     <p class="text-gray-600 font-medium">Penerima Manfaat</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="upcoming-activities" class="py-16 bg-white">
-        <div class="container mx-auto px-4">
+    <!-- Upcoming Activities Section -->
+    <section id="upcoming-activities" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-gray-800 section-title">Kegiatan Mendatang</h2>
                 <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Bergabunglah dengan berbagai kegiatan sosial,
-                    pendidikan, dan bantuan bencana untuk membuat dampak positif di masyarakat</p>
+                    pendidikan, dan bantuan bencana untuk membuat dampak positif di masyarakat.</p>
             </div>
 
-            <div class="px-32 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {{-- Padding diubah untuk layar besar --}}
+            <div class="lg:px-32 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach ($upcomingKegiatans as $kegiatan)
-                    <div class="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2 border border-gray-100"
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col"
                         data-aos="fade-up" data-aos-delay="{{ $loop->iteration * 100 }}">
-                        <!-- Activity Card Image -->
                         <div class="relative h-48 overflow-hidden">
-                            @if ($kegiatan->gambar_sampul)
-                                <img src="{{ asset('storage/' . $kegiatan->gambar_sampul) }}"
-                                    alt="{{ $kegiatan->nama_kegiatan }}" class="w-full h-full object-cover">
-                            @else
-                                <img src="https://placehold.co/600x400" alt="Kegiatan Sosial"
-                                    class="w-full h-full object-cover">
-                            @endif
-
-                            <!-- Activity Type Badge -->
+                            <img src="{{ $kegiatan->gambar_sampul ? asset('storage/' . $kegiatan->gambar_sampul) : 'https://placehold.co/600x400/3B82F6/FFFFFF?text=Kegiatan' }}"
+                                alt="{{ $kegiatan->nama_kegiatan }}" class="w-full h-full object-cover">
                             <div
                                 class="absolute top-4 right-4 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full">
                                 {{ ucfirst($kegiatan->jenis_kegiatan) }}
                             </div>
-
-                            <!-- Date Badge -->
                             <div
                                 class="absolute top-4 left-4 bg-white bg-opacity-90 text-gray-800 text-xs font-bold px-3 py-1 rounded-full">
-                                @php
-                                    $startDate = \Carbon\Carbon::parse($kegiatan->tanggal_mulai_kegiatan);
-                                @endphp
-                                {{ $startDate->format('d M Y') }}
+                                {{ \Carbon\Carbon::parse($kegiatan->tanggal_mulai_kegiatan)->format('d M Y') }}
                             </div>
                         </div>
 
-                        <!-- Card Content -->
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-gray-800 mb-2 line-clamp-2">
-                                {{ \Illuminate\Support\Str::limit($kegiatan->nama_kegiatan, 20, '...') }}
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2 line-clamp-2 flex-grow">
+                                {{ $kegiatan->nama_kegiatan }}
                             </h3>
-
-                            <!-- Location Information -->
                             <div class="flex items-center text-gray-600 text-sm mb-3">
                                 <i class="fas fa-map-marker-alt mr-2"></i>
-                                <span class="line-clamp-1">
-                                    {{ $kegiatan->kelurahan_desa }}, {{ $kegiatan->kecamatan }},
-                                    {{ $kegiatan->kabupaten_kota }}, {{ $kegiatan->provinsi }}
-                                </span>
+                                <span class="line-clamp-1">{{ $kegiatan->kabupaten_kota }},
+                                    {{ $kegiatan->provinsi }}</span>
                             </div>
-
-                            <!-- Date Range -->
-                            <div class="flex items-center text-gray-600 text-sm mb-4">
-                                <i class="fas fa-calendar-alt mr-2"></i>
-                                <span>
-                                    @php
-                                        $startDate = \Carbon\Carbon::parse($kegiatan->tanggal_mulai_kegiatan);
-                                        $endDate = \Carbon\Carbon::parse($kegiatan->tanggal_selesai_kegiatan);
-                                    @endphp
-                                    @if ($startDate->isSameDay($endDate))
-                                        {{ $startDate->format('d M Y') }}
-                                    @else
-                                        {{ $startDate->format('d M') }} - {{ $endDate->format('d M Y') }}
-                                    @endif
-                                </span>
+                            <div class="mt-auto pt-4">
+                                <a href="{{ route('public.kegiatan.show', $kegiatan->id) }}"
+                                    class="w-full block text-center bg-green-600 hover:bg-green-700 py-2.5 text-white rounded-lg font-medium transition-all">
+                                    Lihat Detail
+                                </a>
                             </div>
-
-                            <!-- Participant Limit (if exists) -->
-                            @if ($kegiatan->batas_pendaftar)
-                                <div class="flex items-center justify-between mb-4 text-sm">
-                                    <div class="flex items-center text-gray-600">
-                                        <i class="fas fa-users mr-2"></i>
-                                        <span>Maksimal {{ number_format($kegiatan->batas_pendaftar) }} peserta</span>
-                                    </div>
-                                </div>
-                            @endif
-
-                            <!-- Time Information -->
-                            <div class="flex justify-between items-center mb-5 text-sm">
-                                <div>
-                                    <p class="text-gray-800 font-semibold">
-                                        Dimulai
-                                        @php
-                                            $now = Carbon\Carbon::now();
-                                            $startDate = Carbon\Carbon::parse($kegiatan->tanggal_mulai_kegiatan);
-                                            $endDate = Carbon\Carbon::parse($kegiatan->tanggal_selesai_kegiatan);
-
-                                            if ($now->lt($startDate)) {
-                                                $daysUntil = $now->floatDiffInDays($startDate);
-                                                $status = number_format($daysUntil) . ' hari lagi';
-                                            } elseif ($now->between($startDate, $endDate)) {
-                                                $status = 'Sedang berlangsung';
-                                            } else {
-                                                $status = 'Telah berakhir';
-                                            }
-                                        @endphp
-
-                                        {{ $status }}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- CTA Button -->
-                            <a href="{{ route('public.kegiatan.show', $kegiatan->id) }}"
-                                class="w-full block text-center bg-green-600 hover:bg-green-700 py-2.5 text-white rounded-lg font-medium transition-all">
-                                Lihat Detail
-                            </a>
                         </div>
                     </div>
                 @endforeach
             </div>
 
-            <!-- See All Activities Button -->
             <div class="mt-12 text-center">
                 <a href="{{ route('kegiatan') }}"
                     class="btn-secondary px-8 py-3 bg-white text-gray-700 rounded-xl font-medium border border-gray-200 hover:bg-gray-50">
-                    Lihat Semua Kegiatan
-                    <i class="fas fa-arrow-right ml-2"></i>
+                    Lihat Semua Kegiatan <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
         </div>
     </section>
 
     <!-- Open Donations Section -->
-    <section id="open-donations" class="py-16 bg-gray-50">
-        <div class="container mx-auto px-4">
+    <section id="open-donations" class="py-16 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-gray-800 section-title">Program Donasi Terbuka</h2>
-                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Pilih program donasi yang sesuai dengan kepedulianmu
-                    dan jadilah bagian dari perubahan positif di Indonesia</p>
+                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Pilih program donasi yang sesuai dengan kepedulianmu dan
+                    jadilah bagian dari perubahan positif.</p>
             </div>
 
-            <div class="px-32 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {{-- Padding diubah untuk layar besar --}}
+            <div class="lg:px-32 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach ($openDonations as $donasi)
-                    <div class="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2"
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2 flex flex-col"
                         data-aos="fade-up" data-aos-delay="{{ $loop->iteration * 100 }}">
-                        <!-- Donation Card Image -->
                         <div class="relative h-48 overflow-hidden">
-                            @if ($donasi->gambar)
-                                <img src="{{ asset('storage/' . $donasi->gambar) }}" alt="{{ $donasi->judul }}"
-                                    class="w-full h-full object-cover">
-                            @else
-                                <img src="https://placehold.co/600x400" alt="Donation Program"
-                                    class="w-full h-full object-cover">
-                            @endif
-
-                            <!-- Category Badge -->
+                            <img src="{{ $donasi->gambar ? asset('storage/' . $donasi->gambar) : 'https://placehold.co/600x400/3B82F6/FFFFFF?text=Donasi' }}"
+                                alt="{{ $donasi->nama_donasi }}" class="w-full h-full object-cover">
                             <div
                                 class="absolute top-4 right-4 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-                                {{ ucfirst($donasi->kategori ?? 'Umum') }}
+                                {{ ucfirst($donasi->jenis_donasi ?? 'Umum') }}
                             </div>
                         </div>
 
-                        <!-- Card Content -->
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-gray-800 mb-2 line-clamp-2">{{ $donasi->nama_bencana }}
-                            </h3>
-
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-3">{{ $donasi->deskripsi_singkat }}</p>
-
-                            <!-- Progress Bar -->
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2 line-clamp-2 flex-grow">
+                                {{ $donasi->nama_donasi }}</h3>
                             <div class="mb-4">
                                 <div class="w-full bg-gray-200 rounded-full h-2.5">
                                     <div class="bg-blue-600 h-2.5 rounded-full"
-                                        style="width: {{ $donasi->progressPercentage }}%"></div>
+                                        style="width: {{ $donasi->target_dana > 0 ? min(100, ($donasi->dana_terkumpul / $donasi->target_dana) * 100) : 0 }}%">
+                                    </div>
                                 </div>
                                 <div class="flex justify-between mt-2 text-sm">
-                                    <span
-                                        class="font-medium text-blue-600">{{ number_format($donasi->progressPercentage, 0) }}%</span>
+                                    <span class="font-medium text-blue-600">Rp
+                                        {{ number_format($donasi->dana_terkumpul, 0, ',', '.') }}</span>
                                     <span class="text-gray-500">Target: Rp
                                         {{ number_format($donasi->target_dana, 0, ',', '.') }}</span>
                                 </div>
                             </div>
-
-                            <!-- Fund and Time Information -->
-                            <div class="flex justify-between items-center mb-5 text-sm">
-                                <div>
-                                    <p class="text-gray-800 font-semibold">Rp
-                                        {{ number_format($donasi->dana_terkumpul, 0, ',', '.') }}</p>
-                                    <p class="text-gray-500 text-xs">Terkumpul</p>
-                                </div>
-                                <div>
-                                    <p class="text-gray-800 font-semibold">
-                                        @php
-                                            $remainingDays = \Carbon\Carbon::now()->floatDiffInDays(
-                                                $donasi->tanggal_selesai,
-                                            );
-                                        @endphp
-                                        {{ number_format($remainingDays) }} hari lagi
-                                    </p>
-                                    <p class="text-gray-500 text-xs">Tersisa</p>
-                                </div>
+                            <div class="mt-auto pt-4">
+                                <a href="{{ route('donasi.detail', $donasi->id) }}"
+                                    class="w-full block text-center btn-primary py-2.5 text-white rounded-lg font-medium transition-all">
+                                    Donasi Sekarang
+                                </a>
                             </div>
-
-                            <!-- CTA Button -->
-                            <a href="{{ route('donasi.detail', $donasi->id) }}"
-                                class="w-full block text-center btn-primary py-2.5 text-white rounded-lg font-medium transition-all">
-                                Donasi Sekarang
-                            </a>
                         </div>
                     </div>
                 @endforeach
             </div>
 
-            <!-- See All Donations Button -->
             <div class="mt-12 text-center">
-                <a href="{{ route('donasi.index') }}"
+                <a href="{{ route('donasi') }}"
                     class="btn-secondary px-8 py-3 bg-white text-gray-700 rounded-xl font-medium border border-gray-200 hover:bg-gray-50">
-                    Lihat Semua Program
-                    <i class="fas fa-arrow-right ml-2"></i>
+                    Lihat Semua Program <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
         </div>
@@ -450,146 +354,6 @@
         </div>
     </section>
 
-    <!-- Testimonials -->
-    <section id="testimonials" class="py-16 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center text-gray-800 section-title mb-12">
-                Suara Para Relawan
-            </h2>
-
-            <div class="px-32 grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="testimonial-card bg-white p-6 rounded-xl shadow" data-aos="fade-up" data-aos-delay="100">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-                            <span class="text-blue-600 font-bold">AS</span>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-gray-800">Ani Sulistiawati</h4>
-                            <p class="text-sm text-gray-500">Relawan Pendidikan, Jakarta</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 italic">
-                        "Menjadi relawan mengajar di pelosok Papua membuka mata saya tentang arti sebenarnya dari
-                        pendidikan. Semangat anak-anak di sana membuat saya terus ingin berkontribusi lebih."
-                    </p>
-                    <div class="flex text-yellow-400 mt-4">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                </div>
-
-                <div class="testimonial-card bg-white p-6 rounded-xl shadow" data-aos="fade-up" data-aos-delay="200">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-                            <span class="text-blue-600 font-bold">BH</span>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-gray-800">Budi Hartono</h4>
-                            <p class="text-sm text-gray-500">Tim Tanggap Bencana, Yogyakarta</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 italic">
-                        "Platform ini memudahkan saya untuk bergabung dengan tim tanggap bencana. Sistem koordinasinya
-                        sangat terstruktur dan efektif, sehingga bantuan cepat sampai pada yang membutuhkan."
-                    </p>
-                    <div class="flex text-yellow-400 mt-4">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                    </div>
-                </div>
-
-                <div class="testimonial-card bg-white p-6 rounded-xl shadow" data-aos="fade-up" data-aos-delay="300">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-                            <span class="text-blue-600 font-bold">SP</span>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-gray-800">Siti Purnamasari</h4>
-                            <p class="text-sm text-gray-500">Donatur Tetap, Surabaya</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 italic">
-                        "Saya terkesan dengan transparansi penggunaan dana donasi. Laporan rutin dan update kegiatan
-                        membuat saya percaya bahwa bantuan saya tersalurkan dengan tepat dan memberi dampak nyata."
-                    </p>
-                    <div class="flex text-yellow-400 mt-4">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta-section py-16">
-        <div class="container mx-auto px-4">
-            <div class="bg-white rounded-2xl shadow-xl p-8 lg:p-12 max-w-5xl mx-auto" data-aos="zoom-in">
-                <div class="text-center mb-8">
-                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Bergabunglah Sekarang dan Jadilah Bagian dari
-                        Perubahan</h2>
-                    <p class="text-gray-600 max-w-2xl mx-auto">
-                        Setiap tangan yang terulur, setiap langkah yang diambil, membawa perubahan berarti bagi mereka
-                        yang membutuhkan. Mulailah perjalanan kerelawananmu hari ini.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-blue-50 p-6 rounded-xl text-center" data-aos="fade-up" data-aos-delay="100">
-                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-user-plus text-blue-600 text-2xl"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Daftar</h3>
-                        <p class="text-gray-600 text-sm">
-                            Buat akun dan lengkapi profilmu dalam waktu kurang dari 5 menit.
-                        </p>
-                    </div>
-
-                    <div class="bg-blue-50 p-6 rounded-xl text-center" data-aos="fade-up" data-aos-delay="200">
-                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-search text-blue-600 text-2xl"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Pilih Program</h3>
-                        <p class="text-gray-600 text-sm">
-                            Temukan program yang sesuai dengan minat dan kemampuanmu.
-                        </p>
-                    </div>
-
-                    <div class="bg-blue-50 p-6 rounded-xl text-center" data-aos="fade-up" data-aos-delay="300">
-                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-heart text-blue-600 text-2xl"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Mulai Bergerak</h3>
-                        <p class="text-gray-600 text-sm">
-                            Jadilah bagian dari perubahan dan berikan dampak nyata.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="mt-10 text-center">
-                    <a href="{{ route('register') }}"
-                        class="btn-primary px-8 py-4 text-white rounded-xl font-medium text-lg inline-block">
-                        Daftar Menjadi Relawan
-                        <i class="fas fa-arrow-right ml-2"></i>
-                    </a>
-                    <p class="mt-4 text-gray-500 text-sm">
-                        Sudah punya akun? <a href="{{ route('login') }}" class="text-blue-600 hover:underline">Masuk
-                            di sini</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Partners Section -->
     <section class="py-16 bg-white">
         <div class="container mx-auto px-4">
@@ -633,35 +397,28 @@
 
     <!-- Footer -->
     <footer class="bg-gray-900 text-white pt-16 pb-8">
-        <div class="container mx-auto px-4">
-            <div class="px-32 grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-                <div>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            {{-- Padding diubah untuk layar besar --}}
+            <div class="lg:px-32 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div class="md:col-span-2 lg:col-span-1">
                     <div class="flex items-center space-x-2 mb-6">
-                        <span class="text-2xl font-bold text-blue-400">
-                            <i class="fas fa-hands-helping"></i>
-                        </span>
-                        <span class="font-bold text-xl text-white">RelawanKu</span>
+                        <img src="{{ asset('logo.png') }}" class="h-8" alt="Logo"
+                            onerror="this.style.display='none'">
+                        <span class="font-bold text-xl text-white">Darikita</span>
                     </div>
-                    <p class="text-gray-400 mb-6">
-                        Platform relawan terpercaya yang menghubungkan jiwa-jiwa peduli untuk membuat perubahan nyata di
-                        Indonesia.
-                    </p>
+                    <p class="text-gray-400 mb-6">Platform relawan terpercaya yang menghubungkan jiwa-jiwa peduli untuk
+                        membuat perubahan nyata di Indonesia.</p>
                     <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <i class="fab fa-youtube"></i>
-                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i
+                                class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i
+                                class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i
+                                class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i
+                                class="fab fa-youtube"></i></a>
                     </div>
                 </div>
-
                 <div>
                     <h4 class="text-lg font-semibold mb-6">Program</h4>
                     <ul class="space-y-3">
@@ -671,13 +428,8 @@
                         </li>
                         <li><a href="#" class="text-gray-400 hover:text-white transition">Donasi & Dukungan</a>
                         </li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">Pengembangan
-                                Masyarakat</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">Program
-                                Berkelanjutan</a></li>
                     </ul>
                 </div>
-
                 <div>
                     <h4 class="text-lg font-semibold mb-6">Tentang Kami</h4>
                     <ul class="space-y-3">
@@ -686,42 +438,31 @@
                         <li><a href="#" class="text-gray-400 hover:text-white transition">Tim Kami</a></li>
                         <li><a href="#" class="text-gray-400 hover:text-white transition">Laporan Tahunan</a>
                         </li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">Transparansi Dana</a>
-                        </li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">Karir</a></li>
                     </ul>
                 </div>
-
                 <div>
                     <h4 class="text-lg font-semibold mb-6">Hubungi Kami</h4>
                     <ul class="space-y-3">
-                        <li class="flex items-start">
-                            <i class="fas fa-map-marker-alt text-blue-400 mt-1 mr-3"></i>
-                            <span class="text-gray-400">Jl. Relawan No. 123, Jakarta Selatan, Indonesia</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-phone text-blue-400 mt-1 mr-3"></i>
-                            <span class="text-gray-400">+62 21 1234 5678</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-envelope text-blue-400 mt-1 mr-3"></i>
-                            <span class="text-gray-400">info@relawanku.id</span>
-                        </li>
+                        <li class="flex items-start"><i
+                                class="fas fa-map-marker-alt text-blue-400 mt-1 mr-3"></i><span
+                                class="text-gray-400">Jl. Relawan No. 123, Jakarta</span></li>
+                        <li class="flex items-start"><i class="fas fa-phone text-blue-400 mt-1 mr-3"></i><span
+                                class="text-gray-400">+62 21 1234 5678</span></li>
+                        <li class="flex items-start"><i class="fas fa-envelope text-blue-400 mt-1 mr-3"></i><span
+                                class="text-gray-400">info@darikita.id</span></li>
                     </ul>
                 </div>
             </div>
-
             <div class="border-t border-gray-800 pt-8">
-                <div class="px-32 flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-500 text-sm mb-4 md:mb-0">
-                        &copy; 2025 RelawanKu. Hak Cipta Dilindungi.
-                    </p>
+                {{-- Padding diubah untuk layar besar --}}
+                <div class="lg:px-32 flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-500 text-sm mb-4 md:mb-0">&copy; {{ date('Y') }} Darikita. Hak Cipta
+                        Dilindungi.</p>
                     <div class="flex space-x-4">
                         <a href="#" class="text-gray-500 hover:text-white text-sm transition">Kebijakan
                             Privasi</a>
                         <a href="#" class="text-gray-500 hover:text-white text-sm transition">Syarat &
                             Ketentuan</a>
-                        <a href="#" class="text-gray-500 hover:text-white text-sm transition">FAQ</a>
                     </div>
                 </div>
             </div>
@@ -735,10 +476,38 @@
     </button>
 
     <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <!-- Scripts -->
     <!-- Tailwind (pastikan ini sudah ada) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Flowbite JS -->
     <script src="https://unpkg.com/flowbite@2.3.0/dist/flowbite.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="{{ asset('js/welcome.js') }}"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        // Back to top button
+        const backToTopButton = document.getElementById('back-to-top');
+        window.onscroll = function() {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        };
+        backToTopButton.onclick = function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        };
+    </script>
 </body>
+
+</html>

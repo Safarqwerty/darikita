@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('donasis', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_bencana');
+            $table->string('nama_donasi');
+            $table->string('jenis_donasi');
             $table->text('deskripsi')->nullable();
             $table->decimal('target_dana', 15, 2);
             $table->decimal('dana_terkumpul', 15, 2)->default(0);

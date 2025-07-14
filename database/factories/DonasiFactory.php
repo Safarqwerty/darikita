@@ -14,7 +14,9 @@ class DonasiFactory extends Factory
     {
         $target = rand(10000000, 100000000);
         return [
-            'nama_bencana' => 'Donasi untuk ' . $this->faker->word,
+            // Menggunakan 'nama_donasi' dan menambahkan 'jenis_donasi'
+            'nama_donasi' => 'Donasi untuk ' . $this->faker->words(3, true),
+            'jenis_donasi' => $this->faker->randomElement(['Bencana Alam', 'Pendidikan', 'Kesehatan', 'Sosial']),
             'deskripsi' => $this->faker->paragraph,
             'target_dana' => $target,
             'dana_terkumpul' => rand(1000000, $target),

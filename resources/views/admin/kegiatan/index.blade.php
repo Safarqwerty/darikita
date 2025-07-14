@@ -2,6 +2,7 @@
     <x-slot name="header">
         Daftar Kegiatan
     </x-slot>
+
     <div class="py-4">
         @if (session('success'))
             <div class="mb-4 p-4 bg-green-100 border border-green-300 text-green-800 rounded">
@@ -22,12 +23,10 @@
                         <th class="px-6 py-3">Nama Kegiatan</th>
                         <th class="px-6 py-3">Jenis</th>
                         <th class="px-6 py-3">Lokasi</th>
-                        <th class="px-6 py-3">Gambar Sampul</th>
                         <th class="px-6 py-3">Kuota</th>
                         <th class="px-6 py-3">Pendaftaran</th>
                         <th class="px-6 py-3">Pelaksanaan</th>
                         <th class="px-6 py-3">Status</th>
-                        <th class="px-6 py-3">Admin</th>
                         <th class="px-6 py-3">Aksi</th>
                     </tr>
                 </thead>
@@ -53,14 +52,6 @@
                                         {{ $kegiatan->kecamatan }}, {{ $kegiatan->kelurahan_desa }}
                                     </div>
                                 </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                @if ($kegiatan->gambar_sampul)
-                                    <img src="{{ asset('storage/' . $kegiatan->gambar_sampul) }}" alt="Gambar Sampul"
-                                        class="w-20 h-16 object-cover rounded">
-                                @else
-                                    <span class="text-gray-400 italic text-xs">Tidak ada</span>
-                                @endif
                             </td>
                             <td class="px-6 py-4">
                                 {{ $kegiatan->batas_pendaftar ?? 'Tak terbatas' }}
@@ -97,9 +88,6 @@
                                     @else bg-gray-200 text-gray-600 @endif">
                                     {{ ucfirst($kegiatan->status) }}
                                 </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $kegiatan->creator->name ?? '-' }}
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex flex-col space-y-2">

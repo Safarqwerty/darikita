@@ -25,6 +25,8 @@ return new class extends Migration
             $table->string('agama')->nullable();
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan'])->nullable();
             $table->string('foto')->nullable();
+            $table->string('nomor_wa')->nullable();
+            $table->string('link_instagram')->nullable();
 
             $table->rememberToken();
             $table->timestamps();
