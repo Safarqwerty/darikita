@@ -8,7 +8,6 @@ use App\Http\Controllers\DaftarKegiatanController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PublicController;
-use App\Http\Controllers\Auth\GoogleLoginController;
 use Illuminate\Support\Facades\Route;
 
 // Public Routes
@@ -21,11 +20,6 @@ Route::get('/kontak', [PublicController::class, 'contact'])->name('public.contac
 
 // Route to show the registration form (accessible to guests, but will redirect if not logged in)
 Route::get('/kegiatan/{kegiatan}/daftar', [DaftarKegiatanController::class, 'create'])->name('public.kegiatan.create');
-
-// Google Auth Routes -- Ditambahkan
-Route::get('/auth/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('google.login');
-Route::get('/auth/google/callback', [GoogleLoginController::class, 'handleGoogleCallback']);
-
 
 // Dashboard dan Profil untuk semua pengguna yang sudah login
 Route::middleware('auth')->group(function () {
