@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ asset('logo.png') }}" type="image/x-icon">
     <title>Darikita</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
@@ -18,15 +19,14 @@
     <!-- Hero Section -->
     <section class="hero-pattern pt-20 pb-16 w-full overflow-hidden">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col lg:flex-row items-center">
+            <div class="flex flex-col-reverse lg:flex-row items-center">
                 {{-- Padding diubah untuk layar besar --}}
                 <div class="lg:w-1/2 text-center lg:text-left mb-10 lg:mb-0 lg:pl-24" data-aos="fade-right">
                     <h1 class="text-4xl md:text-5xl font-bold text-gray-800 leading-tight mb-6">
-                        Jadilah Bagian dari <span class="text-blue-600">Perubahan</span> di Indonesia
+                        Bersama kita wujudkan <span class="text-[#01577e]">mimpi</span>
                     </h1>
                     <p class="text-lg text-gray-600 mb-8 max-w-lg mx-auto lg:mx-0">
-                        Bersama kita bisa membantu pendidikan & respon bencana di seluruh Indonesia.
-                        Satu langkah kecilmu, dampak besar bagi mereka.
+                        Satu niat, satu tindakan, sejuta mimpi terwujud. Bersama kita
                     </p>
                     <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
                         <a href="{{ route('register') }}"
@@ -43,14 +43,13 @@
                 <div class="lg:w-1/2" data-aos="fade-left">
                     <div class="relative px-4">
                         <div
-                            class="absolute -top-6 -left-0 w-24 h-24 bg-blue-100 rounded-full opacity-70 hidden lg:block">
+                            class="absolute -top-6 -left-0 w-24 h-24 bg-[#01567e6b] rounded-full opacity-70 hidden lg:block">
                         </div>
                         <div
-                            class="absolute -bottom-6 -right-0 w-32 h-32 bg-blue-100 rounded-full opacity-70 hidden lg:block">
+                            class="absolute -bottom-6 -right-0 w-32 h-32 bg-[#01567e6b] rounded-full opacity-70 hidden lg:block">
                         </div>
-                        <img src="https://blog.maukuliah.id/wp-content/uploads/2023/07/relawan.jpg"
-                            alt="Relawan di Indonesia"
-                            class="relative z-10 rounded-2xl shadow-xl mx-auto w-full max-w-lg">
+                        <img src="{{ asset('hero.jpg') }}" alt="Relawan di Indonesia"
+                            class="relative z-10 rounded-2xl shadow-xl mx-auto w-full max-w-lg mb-5 lg:mb-0">
                     </div>
                 </div>
             </div>
@@ -58,23 +57,25 @@
     </section>
 
     <!-- Stats Section -->
-    <section class="py-16 bg-white">
+    <section class="py-12 bg-white">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-                <div class="stats-item p-4" data-aos="fade-up" data-aos-delay="100">
-                    <p class="text-3xl md:text-4xl font-bold text-blue-600 mb-2">2,500+</p>
+            <div class="grid grid-cols-3 gap-3 text-center">
+                <div class="stats-item p-2" data-aos="fade-up" data-aos-delay="100">
+                    <p class="text-3xl md:text-4xl font-bold text-[#01577e] mb-1">
+                        {{ number_format($totalRelawan) }}
+                    </p>
                     <p class="text-gray-600 font-medium">Relawan Aktif</p>
                 </div>
-                <div class="stats-item p-4" data-aos="fade-up" data-aos-delay="200">
-                    <p class="text-3xl md:text-4xl font-bold text-blue-600 mb-2">150+</p>
+                <div class="stats-item p-2" data-aos="fade-up" data-aos-delay="200">
+                    <p class="text-3xl md:text-4xl font-bold text-[#01577e] mb-1">
+                        {{ number_format($totalKegiatan) }}
+                    </p>
                     <p class="text-gray-600 font-medium">Program Selesai</p>
                 </div>
-                <div class="stats-item p-4" data-aos="fade-up" data-aos-delay="300">
-                    <p class="text-3xl md:text-4xl font-bold text-blue-600 mb-2">34</p>
-                    <p class="text-gray-600 font-medium">Provinsi Terjangkau</p>
-                </div>
-                <div class="stats-item p-4" data-aos="fade-up" data-aos-delay="400">
-                    <p class="text-3xl md:text-4xl font-bold text-blue-600 mb-2">50,000+</p>
+                <div class="stats-item p-2" data-aos="fade-up" data-aos-delay="300">
+                    <p class="text-3xl md:text-4xl font-bold text-[#01577e] mb-1">
+                        {{ number_format($totalDonasi, 0, ',', '.') }}+
+                    </p>
                     <p class="text-gray-600 font-medium">Penerima Manfaat</p>
                 </div>
             </div>
@@ -95,32 +96,57 @@
                 @foreach ($upcomingKegiatans as $kegiatan)
                     <div class="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col"
                         data-aos="fade-up" data-aos-delay="{{ $loop->iteration * 100 }}">
-                        <div class="relative h-48 overflow-hidden">
-                            <img src="{{ $kegiatan->gambar_sampul ? asset('storage/' . $kegiatan->gambar_sampul) : 'https://placehold.co/600x400/3B82F6/FFFFFF?text=Kegiatan' }}"
-                                alt="{{ $kegiatan->nama_kegiatan }}" class="w-full h-full object-cover">
-                            <div
-                                class="absolute top-4 right-4 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-                                {{ ucfirst($kegiatan->jenis_kegiatan) }}
-                            </div>
-                            <div
-                                class="absolute top-4 left-4 bg-white bg-opacity-90 text-gray-800 text-xs font-bold px-3 py-1 rounded-full">
-                                {{ \Carbon\Carbon::parse($kegiatan->tanggal_mulai_kegiatan)->format('d M Y') }}
-                            </div>
+                        <!-- Clean image without overlays -->
+                        <div class="relative h-56 overflow-hidden">
+                            <img src="{{ $kegiatan->gambar_sampul ? asset('storage/' . $kegiatan->gambar_sampul) : 'https://placehold.co/600x400/01577e/FFFFFF?text=Kegiatan' }}"
+                                alt="{{ $kegiatan->nama_kegiatan }}" class="w-full h-full object-cover" loading="lazy">
                         </div>
 
                         <div class="p-6 flex flex-col flex-grow">
-                            <h3 class="text-xl font-bold text-gray-800 mb-2 line-clamp-2 flex-grow">
+                            <!-- Kegiatan type badge -->
+                            <span
+                                class="bg-[#01577e] text-white text-xs font-medium px-2.5 py-0.5 rounded mb-3 self-start">
+                                {{ ucfirst($kegiatan->jenis_kegiatan) }}
+                            </span>
+
+                            <h3 class="text-xl font-bold text-gray-800 mb-3 line-clamp-2">
                                 {{ $kegiatan->nama_kegiatan }}
                             </h3>
-                            <div class="flex items-center text-gray-600 text-sm mb-3">
-                                <i class="fas fa-map-marker-alt mr-2"></i>
-                                <span class="line-clamp-1">{{ $kegiatan->kabupaten_kota }},
-                                    {{ $kegiatan->provinsi }}</span>
+
+                            <!-- Registration info row -->
+                            <div class="flex justify-between items-center mb-3">
+                                <!-- Registration period -->
+                                <div class="flex items-center text-gray-600 text-sm">
+                                    <i class="fas fa-user-clock mr-2 text-[#01577e]"></i>
+                                    <span>
+                                        {{ \Carbon\Carbon::parse($kegiatan->tanggal_mulai_daftar)->format('d M') }} -
+                                        {{ \Carbon\Carbon::parse($kegiatan->tanggal_selesai_daftar)->format('d M Y') }}
+                                    </span>
+                                </div>
+
+                                <!-- Participant limit -->
+                                <div class="text-gray-600 text-sm">
+                                    @if ($kegiatan->batas_pendaftar)
+                                        <span class="bg-gray-100 px-2 py-1 rounded text-xs">
+                                            Kuota: {{ $kegiatan->batas_pendaftar }}
+                                        </span>
+                                    @else
+                                        <span class="text-gray-400 text-xs">Tanpa batas</span>
+                                    @endif
+                                </div>
                             </div>
+
+                            <!-- Location -->
+                            <div class="flex items-center text-gray-600 text-sm mb-4">
+                                <i class="fas fa-map-marker-alt mr-2 text-[#01577e]"></i>
+                                <span class="line-clamp-1">{{ $kegiatan->kelurahan_desa }},
+                                    {{ $kegiatan->kabupaten_kota }}</span>
+                            </div>
+
                             <div class="mt-auto pt-4">
                                 <a href="{{ route('public.kegiatan.show', $kegiatan->id) }}"
-                                    class="w-full block text-center bg-green-600 hover:bg-green-700 py-2.5 text-white rounded-lg font-medium transition-all">
-                                    Lihat Detail
+                                    class="w-full block text-center bg-[#01577e] hover:bg-[#142a4d] py-2.5 text-white rounded-lg font-medium transition-all">
+                                    Daftar Sekarang
                                 </a>
                             </div>
                         </div>
@@ -147,40 +173,77 @@
             </div>
 
             {{-- Padding diubah untuk layar besar --}}
-            <div class="lg:px-32 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="lg:px-32 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
                 @foreach ($openDonations as $donasi)
-                    <div class="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2 flex flex-col"
+                    @php
+                        $progress =
+                            $donasi->target_dana > 0 ? ($donasi->dana_terkumpul / $donasi->target_dana) * 100 : 0;
+                        $daysLeft = \Carbon\Carbon::now()->diffInDays(
+                            \Carbon\Carbon::parse($donasi->tanggal_selesai),
+                            false,
+                        );
+                        $isExpired = $daysLeft < 0;
+                        $isUrgent = $daysLeft <= 7 && $daysLeft >= 0;
+                        $isWarning = $daysLeft <= 14 && $daysLeft > 7;
+                    @endphp
+
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col"
                         data-aos="fade-up" data-aos-delay="{{ $loop->iteration * 100 }}">
-                        <div class="relative h-48 overflow-hidden">
-                            <img src="{{ $donasi->gambar ? asset('storage/' . $donasi->gambar) : 'https://placehold.co/600x400/3B82F6/FFFFFF?text=Donasi' }}"
+                        <div class="relative h-56 overflow-hidden">
+                            <img src="{{ $donasi->gambar ? asset('storage/' . $donasi->gambar) : 'https://placehold.co/600x400/10b981/FFFFFF?text=Donasi' }}"
                                 alt="{{ $donasi->nama_donasi }}" class="w-full h-full object-cover">
-                            <div
-                                class="absolute top-4 right-4 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-                                {{ ucfirst($donasi->jenis_donasi ?? 'Umum') }}
-                            </div>
                         </div>
 
                         <div class="p-6 flex flex-col flex-grow">
-                            <h3 class="text-xl font-bold text-gray-800 mb-2 line-clamp-2 flex-grow">
-                                {{ $donasi->nama_donasi }}</h3>
+                            <!-- Kategori Donasi -->
+                            <span
+                                class="bg-[#01577e] text-white text-xs font-medium px-2.5 py-0.5 rounded mb-3 self-start">
+                                {{ ucfirst($donasi->jenis_donasi ?? 'Umum') }}
+                            </span>
+
+                            <h3 class="text-xl font-bold text-gray-800 mb-3 line-clamp-2">
+                                {{ $donasi->nama_donasi }}
+                            </h3>
+
+                            <!-- Progress Bar -->
                             <div class="mb-4">
-                                <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                    <div class="bg-blue-600 h-2.5 rounded-full"
-                                        style="width: {{ $donasi->target_dana > 0 ? min(100, ($donasi->dana_terkumpul / $donasi->target_dana) * 100) : 0 }}%">
-                                    </div>
+                                <div class="flex justify-between text-sm text-gray-600 mb-2">
+                                    <span>Terkumpul</span>
+                                    <span>{{ number_format($progress, 1) }}%</span>
                                 </div>
-                                <div class="flex justify-between mt-2 text-sm">
-                                    <span class="font-medium text-blue-600">Rp
-                                        {{ number_format($donasi->dana_terkumpul, 0, ',', '.') }}</span>
-                                    <span class="text-gray-500">Target: Rp
-                                        {{ number_format($donasi->target_dana, 0, ',', '.') }}</span>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-[#01577e] h-2.5 rounded-full"
+                                        style="width: {{ min($progress, 100) }}%"></div>
+                                </div>
+                                <div class="flex justify-between text-sm mt-2">
+                                    <span class="font-semibold text-[#01577e]">
+                                        Rp {{ number_format($donasi->dana_terkumpul, 0, ',', '.') }}
+                                    </span>
+                                    <span class="text-gray-500">
+                                        Rp {{ number_format($donasi->target_dana, 0, ',', '.') }}
+                                    </span>
                                 </div>
                             </div>
+
+                            <!-- Periode Donasi -->
+                            <div class="flex items-center text-gray-600 text-sm mb-4">
+                                <i class="fas fa-calendar-alt mr-2"></i>
+                                <span>{{ \Carbon\Carbon::parse($donasi->tanggal_mulai)->format('d M Y') }} -
+                                    {{ \Carbon\Carbon::parse($donasi->tanggal_selesai)->format('d M Y') }}</span>
+                            </div>
+
                             <div class="mt-auto pt-4">
-                                <a href="{{ route('donasi.detail', $donasi->id) }}"
-                                    class="w-full block text-center btn-primary py-2.5 text-white rounded-lg font-medium transition-all">
-                                    Donasi Sekarang
-                                </a>
+                                @if ($isExpired)
+                                    <button disabled
+                                        class="w-full block text-center bg-gray-400 py-2.5 text-white rounded-lg font-medium cursor-not-allowed">
+                                        Donasi Ditutup
+                                    </button>
+                                @else
+                                    <a href="{{ route('donasi.detail', $donasi->id) }}"
+                                        class="w-full block text-center bg-[#01577e] hover:bg-[#142a4d] py-2.5 text-white rounded-lg font-medium transition-all">
+                                        Donasi Sekarang
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -190,7 +253,7 @@
             <div class="mt-12 text-center">
                 <a href="{{ route('donasi') }}"
                     class="btn-secondary px-8 py-3 bg-white text-gray-700 rounded-xl font-medium border border-gray-200 hover:bg-gray-50">
-                    Lihat Semua Program <i class="fas fa-arrow-right ml-2"></i>
+                    Lihat Semua Donasi <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
         </div>
@@ -202,7 +265,7 @@
             <h2 class="text-3xl font-bold text-center text-gray-800 section-title mb-12">
                 Program Relawan Unggulan
             </h2>
-            <div class="px-32 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="lg:px-32 grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="category-card bg-white rounded-2xl shadow-lg overflow-hidden relative" data-aos="fade-up"
                     data-aos-delay="100">
                     <div class="bg-blue-50 h-3"></div>
@@ -289,7 +352,7 @@
                 Lihat bagaimana kontribusi para relawan telah membawa perubahan nyata.
             </p>
 
-            <div class="px-32 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 items-center">
+            <div class="lg:px-32 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 items-center">
                 <div data-aos="fade-right">
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSWZICHPc6Un8mzowfp2T8p4hsD9Geg9xATA&s"
                         alt="Dampak pendidikan" class="rounded-xl shadow-lg mx-auto">
@@ -362,33 +425,29 @@
             </h2>
 
             <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16">
-                <div class="grayscale hover:grayscale-0 transition opacity-70 hover:opacity-100" data-aos="fade-up">
-                    <div class="w-32 h-16 bg-gray-100 rounded flex items-center justify-center">
-                        <span class="font-bold text-gray-400">Partner 1</span>
+                <div class="transition opacity-70 hover:opacity-100" data-aos="fade-up">
+                    <div class="w-20 h-10 bg-gray-100 rounded flex items-center justify-center">
+                        <img src="{{ asset('sponsor1.jpg') }}" alt="Partner 1" class="rounded">
                     </div>
                 </div>
-                <div class="grayscale hover:grayscale-0 transition opacity-70 hover:opacity-100" data-aos="fade-up"
-                    data-aos-delay="100">
-                    <div class="w-32 h-16 bg-gray-100 rounded flex items-center justify-center">
-                        <span class="font-bold text-gray-400">Partner 2</span>
+                <div class="transition opacity-70 hover:opacity-100" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-20 h-10 bg-gray-100 rounded flex items-center justify-center">
+                        <img src="{{ asset('sponsor2.jpg') }}" alt="Partner 2" class="rounded">
                     </div>
                 </div>
-                <div class="grayscale hover:grayscale-0 transition opacity-70 hover:opacity-100" data-aos="fade-up"
-                    data-aos-delay="200">
-                    <div class="w-32 h-16 bg-gray-100 rounded flex items-center justify-center">
-                        <span class="font-bold text-gray-400">Partner 3</span>
+                <div class="transition opacity-70 hover:opacity-100" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-20 h-10 bg-gray-100 rounded flex items-center justify-center">
+                        <img src="{{ asset('sponsor3.jpg') }}" alt="Partner 3" class="rounded">
                     </div>
                 </div>
-                <div class="grayscale hover:grayscale-0 transition opacity-70 hover:opacity-100" data-aos="fade-up"
-                    data-aos-delay="300">
-                    <div class="w-32 h-16 bg-gray-100 rounded flex items-center justify-center">
-                        <span class="font-bold text-gray-400">Partner 4</span>
+                <div class="transition opacity-70 hover:opacity-100" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-20 h-10 bg-gray-100 rounded flex items-center justify-center">
+                        <img src="{{ asset('sponsor4.jpg') }}" alt="Partner 4" class="rounded">
                     </div>
                 </div>
-                <div class="grayscale hover:grayscale-0 transition opacity-70 hover:opacity-100" data-aos="fade-up"
-                    data-aos-delay="400">
-                    <div class="w-32 h-16 bg-gray-100 rounded flex items-center justify-center">
-                        <span class="font-bold text-gray-400">Partner 5</span>
+                <div class="transition opacity-70 hover:opacity-100" data-aos="fade-up" data-aos-delay="400">
+                    <div class="w-20 h-10 bg-gray-100 rounded flex items-center justify-center">
+                        <img src="{{ asset('sponsor5.jpg') }}" alt="Partner 5" class="rounded">
                     </div>
                 </div>
             </div>
@@ -399,7 +458,7 @@
 
     <!-- Back to top button -->
     <button id="back-to-top"
-        class="fixed bottom-6 right-6 z-50 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg opacity-0 invisible transition-all duration-300">
+        class="fixed bottom-6 right-6 z-50 w-12 h-12 bg-[#01577e] text-white rounded-full flex items-center justify-center shadow-lg opacity-0 invisible transition-all duration-300">
         <i class="fas fa-arrow-up"></i>
     </button>
 

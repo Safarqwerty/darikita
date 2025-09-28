@@ -25,6 +25,11 @@ class DashboardController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        // Get user stats
+        $totalUsers = User::where('email', '!=', 'admin@gmail.com')->count();
+        $users = User::where('email', '!=', 'admin@gmail.com')
+                    ->latest() // sama dengan ->orderBy('created_at', 'DESC')
+                    ->get();
         // Get donation stats
         $totalDonasi = Donasi::count();
         $donasiAktif = Donasi::where('status', 'aktif')->count();
@@ -76,7 +81,7 @@ class DashboardController extends Controller
             'totalDonasi', 'donasiAktif', 'totalDanaTerkumpul', 'totalDonatur',
             'totalKegiatan', 'kegiatanAktif', 'totalPendaftar', 'pendaftarApproved',
             'totalUsers', 'newUsers', 'latestDonations', 'latestRegistrations',
-            'chartLabels', 'chartData'
+            'chartLabels', 'chartData', 'users'
         ));
     }
 

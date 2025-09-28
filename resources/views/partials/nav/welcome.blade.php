@@ -13,7 +13,7 @@
                 @foreach (config('welcome-navbar') as $nav)
                     <li>
                         <a href="{{ $nav['route'] }}"
-                            class="@if (url($nav['route']) == url()->current()) text-blue-600 @else text-grey-700 @endif font-medium hover:text-blue-800 transition-colors duration-200">
+                            class="@if (url($nav['route']) == url()->current()) text-[#01577e] @else text-grey-700 @endif font-medium hover:text-blue-800 transition-colors duration-200">
                             {{ $nav['title'] }}
                         </a>
                     </li>
@@ -26,12 +26,12 @@
             @guest
                 <!-- Login Button -->
                 <a href="{{ route('login') }}"
-                    class="text-blue-600 border border-blue-600 hover:bg-blue-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+                    class="text-[#01577e] border border-[#01577e] hover:bg-blue-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
                     Masuk
                 </a>
                 <!-- Register Button -->
                 <a href="{{ route('register') }}"
-                    class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+                    class="text-white bg-[#01577e] hover:bg-[#004463] px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
                     Daftar
                 </a>
             @endguest
@@ -98,7 +98,7 @@
         <div class="px-4 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
             @foreach (config('welcome-navbar') as $nav)
                 <a href="{{ $nav['route'] }}"
-                    class="@if (url($nav['route']) == url()->current()) text-blue-600 @else text-grey-700 @endif block px-3 py-2 rounded-md font-medium hover:text-blue-800 transition-colors duration-200">
+                    class="@if (url($nav['route']) == url()->current()) text-[#01577e] @else text-grey-700 @endif block px-3 py-2 rounded-md font-medium hover:text-blue-800 transition-colors duration-200">
                     {{ $nav['title'] }}
                 </a>
             @endforeach
@@ -108,11 +108,11 @@
                 @guest
                     <div class="space-y-2">
                         <a href="{{ route('login') }}"
-                            class="block w-full text-center px-3 py-2 text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50 transition-colors duration-200">
+                            class="block w-full text-center px-3 py-2 text-[#01577e] border border-[#01577e] rounded-md hover:bg-blue-50 transition-colors duration-200">
                             Masuk
                         </a>
                         <a href="{{ route('register') }}"
-                            class="block w-full text-center px-3 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors duration-200">
+                            class="block w-full text-center px-3 py-2 text-white bg-[#01577e] rounded-md hover:bg-blue-700 transition-colors duration-200">
                             Daftar
                         </a>
                     </div>

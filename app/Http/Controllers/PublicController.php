@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Donasi;
 use App\Models\Kegiatan;
 use Illuminate\Http\Request;
@@ -14,6 +16,7 @@ class PublicController extends Controller
     {
         $query = Kegiatan::query()
             ->where('status', 'publish') // Hanya tampilkan kegiatan yang sudah dipublish
+            ->whereDate('tanggal_selesai_daftar', '>=', Carbon::today()) // Hanya yang belum lewat tanggal selesai pendaftaran
             ->orderBy('tanggal_mulai_kegiatan', 'asc');
 
         // Filter berdasarkan pencarian nama atau deskripsi
@@ -21,7 +24,7 @@ class PublicController extends Controller
             $searchTerm = $request->search;
             $query->where(function($q) use ($searchTerm) {
                 $q->where('nama_kegiatan', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('deskripsi_kegiatan', 'like', '%' . $searchTerm . '%');
+                    ->orWhere('deskripsi_kegiatan', 'like', '%' . $searchTerm . '%');
             });
         }
 
@@ -40,6 +43,7 @@ class PublicController extends Controller
 
         // Mendapatkan opsi jenis kegiatan yang unik dari database
         $jenisKegiatanOptions = Kegiatan::where('status', 'publish')
+            ->whereDate('tanggal_selesai_daftar', '>=', Carbon::today())
             ->distinct()
             ->pluck('jenis_kegiatan')
             ->sort()
@@ -53,26 +57,52 @@ class PublicController extends Controller
      */
     public function welcome()
     {
+        // 1. Auto-close donasi yang sudah lewat tanggalnya ATAU target tercapai
+        Donasi::where('status', 'open')
+        ->where(function($query) {
+            $query->whereDate('tanggal_selesai', '<', Carbon::now())
+                ->orWhereColumn('dana_terkumpul', '>=', 'target_dana');
+        })
+        ->update(['status' => 'closed']);
+
+        // 2. Ambil donasi yang masih open dan belum mencapai target
         $openDonations = Donasi::where('status', 'open')
-            ->whereDate('tanggal_selesai', '>=', now())
-            ->latest()
-            ->take(3)
-            ->get();
-
-        foreach ($openDonations as $donasi) {
-            $donasi->progressPercentage = 0;
-            if ($donasi->target_dana > 0) {
-                $donasi->progressPercentage = min(100, ($donasi->dana_terkumpul / $donasi->target_dana) * 100);
-            }
-        }
-
-        $upcomingKegiatans = Kegiatan::where('status', 'publish')
-        ->whereDate('tanggal_selesai_kegiatan', '>=', now())
+        ->whereDate('tanggal_selesai', '>=', now())
+        ->whereColumn('dana_terkumpul', '<', 'target_dana')
         ->latest()
         ->take(3)
         ->get();
 
-        return view('welcome', compact('openDonations', 'upcomingKegiatans'));
+        // 3. Hitung progress
+        $openDonations->each(function ($donasi) {
+            $donasi->progressPercentage = $donasi->target_dana > 0
+                ? min(100, ($donasi->dana_terkumpul / $donasi->target_dana) * 100)
+                : 0;
+            $donasi->daysLeft = Carbon::now()->diffInDays(Carbon::parse($donasi->tanggal_selesai), false);
+        });
+
+        // 4. Ambil kegiatan upcoming (hanya yang belum lewat tanggal pendaftaran)
+        $upcomingKegiatans = Kegiatan::where('status', 'publish')
+            ->whereDate('tanggal_selesai_daftar', '>=', now())
+            ->whereDate('tanggal_selesai_kegiatan', '>=', now())
+            ->latest()
+            ->take(3)
+            ->get();
+
+        // 5. Statistik jumlah
+        $totalRelawan = User::where('email', '!=', 'admin@gmail.com')->count();
+        $totalKegiatan = Kegiatan::count();
+        $donasiSebelumnya = 3350;
+        $donasiSekarang = Donasi::count();
+        $totalDonasi = $donasiSebelumnya + $donasiSekarang;
+
+        return view('welcome', compact(
+            'openDonations',
+            'upcomingKegiatans',
+            'totalRelawan',
+            'totalKegiatan',
+            'totalDonasi'
+        ));
     }
 
     /**
@@ -101,40 +131,67 @@ class PublicController extends Controller
      */
     public function donasi(Request $request)
     {
-        $query = Donasi::where('status', 'open');
+        // 1. Auto-close expired or target-reached donations first
+        Donasi::where('status', 'open')
+                ->where(function($query) {
+                    $query->whereDate('tanggal_selesai', '<', Carbon::now())
+                        ->orWhereColumn('dana_terkumpul', '>=', 'target_dana');
+                })
+                ->update(['status' => 'closed']);
 
-        // Filter berdasarkan pencarian
-        if ($request->has('search') && $request->search) {
-            $query->where('nama_donasi', 'like', '%' . $request->search . '%')
-                ->orWhere('deskripsi', 'like', '%' . $request->search . '%');
+        // 2. Base query for active donations
+        $query = Donasi::where('status', 'open')
+                        ->whereDate('tanggal_selesai', '>=', Carbon::now())
+                        ->whereColumn('dana_terkumpul', '<', 'target_dana');
+
+        // 3. Enhanced search with better handling
+        if ($request->filled('search')) {
+            $searchTerm = '%' . $request->search . '%';
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('nama_donasi', 'like', $searchTerm)
+                    ->orWhere('deskripsi', 'like', $searchTerm);
+            });
         }
 
-        // Filter berdasarkan jenis donasi
-        if ($request->has('jenis_donasi') && $request->jenis_donasi) {
+        // 4. Filter improvements
+        if ($request->filled('jenis_donasi')) {
             $query->where('jenis_donasi', $request->jenis_donasi);
         }
 
-        // Filter berdasarkan status
-        if ($request->has('status') && $request->status) {
+        // 5. Status filter (now includes closed donations)
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
-        }
 
-        $donasis = $query->latest()->paginate(12);
-
-        // Calculate progress for each donation
-        foreach ($donasis as $donasi) {
-            $donasi->progressPercentage = 0;
-            if ($donasi->target_dana > 0) {
-                $donasi->progressPercentage = min(100, ($donasi->dana_terkumpul / $donasi->target_dana) * 100);
+            // If showing closed donations, remove the active donation conditions
+            if ($request->status === 'closed') {
+                $query->where(function($q) {
+                    $q->whereDate('tanggal_selesai', '<', Carbon::now())
+                        ->orWhereColumn('dana_terkumpul', '>=', 'target_dana');
+                });
             }
         }
 
-        // Get unique jenis_donasi options for the filter dropdown
-        $jenisDonasiOptions = Donasi::distinct()
-            ->pluck('jenis_donasi')
-            ->filter() // Remove empty/null values
-            ->sort()
-            ->values();
+        // 6. Pagination with query string preservation
+        $donasis = $query->latest()->paginate(12);
+
+        // 7. Calculate additional donation metrics
+        $donasis->each(function ($donasi) {
+            $donasi->progressPercentage = $donasi->target_dana > 0
+                ? min(100, ($donasi->dana_terkumpul / $donasi->target_dana) * 100)
+                : 0;
+
+            $donasi->daysLeft = Carbon::parse($donasi->tanggal_selesai)
+                                    ->diffInDays(Carbon::now(), false);
+
+            $donasi->isUrgent = $donasi->daysLeft <= 7 && $donasi->daysLeft >= 0;
+        });
+
+        // 8. Get filter options
+        $jenisDonasiOptions = Donasi::where('status', 'open')
+                                ->whereNotNull('jenis_donasi')
+                                ->distinct()
+                                ->orderBy('jenis_donasi')
+                                ->pluck('jenis_donasi');
 
         return view('public.donasi.index', compact('donasis', 'jenisDonasiOptions'));
     }
@@ -145,6 +202,12 @@ class PublicController extends Controller
     public function showKegiatan($id)
     {
         $kegiatan = Kegiatan::findOrFail($id);
+
+        // Cek apakah kegiatan sudah lewat tanggal selesai pendaftaran
+        if ($kegiatan->tanggal_selesai_daftar < Carbon::today()) {
+            return redirect()->route('public.kegiatan.index')
+                ->with('error', 'Pendaftaran untuk kegiatan ini sudah ditutup.');
+        }
 
         // Debug: cek struktur data gambar
         \Log::info('Data kegiatan:', [
@@ -172,118 +235,11 @@ class PublicController extends Controller
 
         $relatedKegiatans = Kegiatan::where('status', 'publish')
             ->where('id', '!=', $id)
+            ->whereDate('tanggal_selesai_daftar', '>=', Carbon::today())
             ->latest()
             ->take(3)
             ->get();
 
         return view('public.kegiatan.detail', compact('kegiatan', 'relatedKegiatans'));
-    }
-
-    public function daftarKegiatan(Request $request, $id)
-    {
-        $kegiatan = Kegiatan::findOrFail($id);
-
-        // Cek apakah kegiatan sudah berakhir - sesuaikan dengan nama kolom yang benar
-        if ($kegiatan->tanggal_selesai_kegiatan < now()) {
-            return redirect()->route('public.kegiatan.show', $id)
-                ->with('error', 'Kegiatan ini sudah berakhir.');
-        }
-
-        // Validasi: Cek apakah user sudah pernah mendaftar untuk kegiatan ini
-        $existingRegistration = DaftarKegiatan::where('user_id', auth()->user()->id)
-            ->where('kegiatan_id', $id)
-            ->first();
-
-        if ($existingRegistration) {
-            return redirect()->route('dashboard')
-                ->with('error', 'Anda sudah pernah mendaftar untuk kegiatan ini.');
-        }
-
-        $request->validate([
-            'latar_belakang' => 'required|string|max:500',
-            'pernah_relawan' => 'required|in:0,1', // Menggunakan in validation
-            'nama_kegiatan_sebelumnya' => 'nullable|string|max:500',
-            'jenis_kendaraan' => 'required|string|in:motor,mobil,tidak_ada',
-            'merk_kendaraan' => 'nullable|string|max:100',
-            'siap_kontribusi' => 'required|in:0,1', // Menggunakan in validation
-            'bukti_follow' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'bukti_repost' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-        ], [
-            'latar_belakang.required' => 'Latar belakang wajib diisi.',
-            'pernah_relawan.required' => 'Pilihan pernah relawan wajib dipilih.',
-            'jenis_kendaraan.required' => 'Jenis kendaraan wajib dipilih.',
-            'siap_kontribusi.required' => 'Pilihan siap kontribusi wajib dipilih.',
-            'bukti_follow.required' => 'Bukti follow social media wajib diupload.',
-            'bukti_repost.required' => 'Bukti repost/share wajib diupload.',
-            'bukti_follow.image' => 'File bukti follow harus berupa gambar.',
-            'bukti_repost.image' => 'File bukti repost harus berupa gambar.',
-            'bukti_follow.max' => 'Ukuran file bukti follow maksimal 2MB.',
-            'bukti_repost.max' => 'Ukuran file bukti repost maksimal 2MB.',
-        ]);
-
-        try {
-            // Upload bukti follow menggunakan Laravel Storage
-            // Upload bukti follow
-            if ($request->file('bukti_follow')) {
-                $file = $request->file('bukti_follow');
-                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('storage/bukti_follow'), $filename);
-                $data['bukti_follow'] = 'bukti_follow/' . $filename;
-            }
-            // Upload bukti repost
-            if ($request->file('bukti_repost')) {
-                $file = $request->file('bukti_repost');
-                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('storage/bukti_repost'), $filename);
-                $data['bukti_repost'] = 'bukti_repost/' . $filename;
-            }
-
-            // Pastikan kedua file berhasil diupload
-            if (!$data['bukti_follow'] || !$data['bukti_repost']) {
-                return redirect()->back()
-                    ->with('error', 'Gagal mengupload file. Silakan coba lagi.')
-                    ->withInput();
-            }
-
-            // Data yang akan disimpan
-            $dataToSave = [
-                'user_id' => auth()->user()->id,
-                'kegiatan_id' => $id,
-                'status' => 'pending',
-                'tanggal_daftar' => now(),
-                'latar_belakang' => $request->latar_belakang,
-                'pernah_relawan' => (bool) $request->pernah_relawan, // Convert to boolean
-                'nama_kegiatan_sebelumnya' => $request->nama_kegiatan_sebelumnya,
-                'jenis_kendaraan' => $request->jenis_kendaraan,
-                'merk_kendaraan' => $request->merk_kendaraan,
-                'siap_kontribusi' => (bool) $request->siap_kontribusi, // Convert to boolean
-                'bukti_follow' => $data['bukti_follow'] ?? null,
-                'bukti_repost' => $data['bukti_repost'] ?? null,
-            ];
-
-            // Debug data (hapus pada production)
-            \Log::info('Data pendaftaran kegiatan:', $dataToSave);
-
-            // Simpan ke database
-            DaftarKegiatan::create($dataToSave);
-
-            return redirect()->route('dashboard')
-                ->with('success', 'Pendaftaran berhasil dikirim! Silakan tunggu konfirmasi dari admin.');
-
-        } catch (\Exception $e) {
-            // Hapus file jika save gagal
-            if (isset($buktiFollowPath)) {
-                Storage::disk('public')->delete($buktiFollowPath);
-            }
-            if (isset($buktiRepostPath)) {
-                Storage::disk('public')->delete($buktiRepostPath);
-            }
-
-            \Log::error('Error saat pendaftaran kegiatan: ' . $e->getMessage());
-
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat mendaftar. Silakan coba lagi.')
-                ->withInput();
-        }
     }
 }

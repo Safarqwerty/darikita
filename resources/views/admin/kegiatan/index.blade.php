@@ -83,18 +83,14 @@
                             <td class="px-6 py-4">
                                 <span
                                     class="inline-block px-2 py-1 text-xs font-semibold rounded
-                                    @if ($kegiatan->status === 'publish') bg-green-100 text-green-800
-                                    @elseif ($kegiatan->status === 'draft') bg-yellow-100 text-yellow-800
-                                    @else bg-gray-200 text-gray-600 @endif">
+                                    @if ($kegiatan->status === 'publish') text-green-800
+                                    @elseif ($kegiatan->status === 'draft') text-yellow-800
+                                    @else text-gray-600 @endif">
                                     {{ ucfirst($kegiatan->status) }}
                                 </span>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex flex-col space-y-2">
-                                    {{-- Detail Button --}}
-                                    <a href="{{ route('kegiatan.show', $kegiatan->id) }}"
-                                        class="text-indigo-600 hover:underline text-xs">Detail</a>
-
                                     {{-- Aksi untuk Admin --}}
                                     @can('manage kegiatans')
                                         <a href="{{ route('kegiatan.edit', $kegiatan->id) }}"

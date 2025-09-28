@@ -58,7 +58,7 @@
                             <h3 class="text-xl font-bold text-gray-900">{{ $user->name }}</h3>
                             <p class="text-sm text-gray-500 mb-4">{{ $user->email }}</p>
                             <a href="{{ route('profile.edit') }}"
-                                class="w-full text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+                                class="w-full text-center bg-[#01577e] hover:bg-[#01567eee] text-white font-bold py-2 px-4 rounded-lg transition duration-300">
                                 Edit Profil
                             </a>
                         </div>
@@ -152,6 +152,9 @@
                                             <th
                                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Status</th>
+                                            <th
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Kontribusi</th>
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
@@ -182,10 +185,63 @@
                                                         </span>
                                                     @endif
                                                 </td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    @if ($item->status == 'diterima')
+                                                        @if (!$item->bukti_kontribusi)
+                                                            <!-- Form upload bukti kontribusi -->
+                                                            <form
+                                                                action="{{ route('upload.bukti.kontribusi', $item->id) }}"
+                                                                method="POST" enctype="multipart/form-data"
+                                                                class="inline">
+                                                                @csrf
+                                                                <div class="flex items-center space-x-2">
+                                                                    <input type="file" name="bukti_kontribusi"
+                                                                        accept=".pdf,.jpg,.jpeg,.png"
+                                                                        class="text-xs border border-gray-300 rounded px-2 py-1"
+                                                                        required>
+                                                                    <button type="submit"
+                                                                        class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded">
+                                                                        Upload
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        @else
+                                                            <!-- Jika sudah upload, tampilkan status dan link download -->
+                                                            <div class="flex items-center space-x-2">
+                                                                <span class="text-xs text-green-600">✓ Sudah
+                                                                    Upload</span>
+                                                                <a href="{{ asset('storage/' . $item->bukti_kontribusi) }}"
+                                                                    target="_blank"
+                                                                    class="text-xs text-blue-600 hover:text-blue-800">
+                                                                    Lihat
+                                                                </a>
+                                                                <!-- Opsi untuk upload ulang -->
+                                                                <form
+                                                                    action="{{ route('upload.bukti.kontribusi', $item->id) }}"
+                                                                    method="POST" enctype="multipart/form-data"
+                                                                    class="inline">
+                                                                    @csrf
+                                                                    <div class="flex items-center space-x-1">
+                                                                        <input type="file" name="bukti_kontribusi"
+                                                                            accept=".pdf,.jpg,.jpeg,.png"
+                                                                            class="text-xs border border-gray-300 rounded px-1 py-1"
+                                                                            style="width: 120px;">
+                                                                        <button type="submit"
+                                                                            class="bg-green-500 hover:bg-green-700 text-white text-xs px-2 py-1 rounded">
+                                                                            Update
+                                                                        </button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        @endif
+                                                    @else
+                                                        <span class="text-xs text-gray-400">-</span>
+                                                    @endif
+                                                </td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                                                <td colspan="5" class="px-6 py-4 text-center text-gray-500">
                                                     Anda belum mendaftar kegiatan apapun.
                                                 </td>
                                             </tr>

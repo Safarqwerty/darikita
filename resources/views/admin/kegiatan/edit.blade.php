@@ -214,6 +214,17 @@
                 </div>
 
                 <div class="mb-6">
+                    <label class="block font-semibold mb-1">Link Grup (WhatsApp/Telegram)</label>
+                    <input type="url" name="link_grup" class="w-full border rounded px-3 py-2"
+                        placeholder="https://chat.whatsapp.com/..."
+                        value="{{ old('link_grup', $kegiatan->link_grup) }}">
+                    <p class="text-sm text-gray-600 mt-1">Masukkan link grup komunikasi untuk kegiatan ini</p>
+                    @error('link_grup')
+                        <p class="text-red-600 text-sm">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-6">
                     <label class="block font-semibold mb-1">Status</label>
                     <select name="status" class="w-full border rounded px-3 py-2" required>
                         <option value="draft" {{ old('status', $kegiatan->status) == 'draft' ? 'selected' : '' }}>

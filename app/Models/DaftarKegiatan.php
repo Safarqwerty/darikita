@@ -30,6 +30,8 @@ class DaftarKegiatan extends Model
         'bukti_follow',
         'bukti_repost',
         'alasan_diloloskan',
+        'bukti_kontribusi',
+        'tanggal_upload_bukti',
     ];
 
     /**
@@ -40,6 +42,7 @@ class DaftarKegiatan extends Model
     protected $casts = [
         'pernah_relawan' => 'boolean',
         'siap_kontribusi' => 'boolean',
+        'tanggal_upload_bukti' => 'datetime',
         'tanggal_daftar' => 'datetime',
     ];
 

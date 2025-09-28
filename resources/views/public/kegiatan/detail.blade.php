@@ -4,9 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Darikita</title>
+    <link rel="icon" href="{{ asset('logo.png') }}" type="image/x-icon">
+    <title>Darikita - Detail Kegiatan</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -133,14 +135,6 @@
     <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900">
-                <!-- Header Form -->
-                <div class="mb-6">
-                    <h3 class="text-lg font-medium text-gray-900 mb-2">
-                        {{ $kegiatan->nama_kegiatan ?? 'Kegiatan' }}
-                    </h3>
-                    <p class="text-sm text-gray-600">Silakan lengkapi data berikut untuk mendaftar kegiatan</p>
-                </div>
-
                 <!-- Gambar Kegiatan -->
                 @if (!empty($kegiatan->gambar_lokasi))
                     @php
@@ -150,39 +144,19 @@
                             : (is_string($kegiatan->gambar_lokasi)
                                 ? [$kegiatan->gambar_lokasi]
                                 : []);
-
-                        // Debug: tampilkan isi gambar array
-                        // dd($gambarArray); // Uncomment untuk debug
-
                     @endphp
 
                     @if (count($gambarArray) > 0)
                         <div class="mb-6">
-
                             <!-- Main Image Display -->
                             <div class="relative rounded-lg overflow-hidden shadow-lg mb-4">
                                 <div id="mainImageContainer" class="relative h-96">
                                     @foreach ($gambarArray as $index => $gambar)
-                                        @php
-                                            $imagePath = asset('storage/' . $gambar);
-                                            $imageExists = file_exists(public_path('storage/' . $gambar));
-                                        @endphp
-
-                                        @if ($imageExists)
-                                            <img src="{{ $imagePath }}" alt="Lokasi Kegiatan {{ $index + 1 }}"
-                                                class="main-image absolute inset-0 w-full h-full object-cover transition-opacity duration-500 {{ $index === 0 ? 'opacity-100' : 'opacity-0' }}"
-                                                data-index="{{ $index }}"
-                                                onerror="this.style.display='none'; console.log('Error loading image: {{ $imagePath }}');">
-                                        @else
-                                            <div class="main-image absolute inset-0 w-full h-full bg-gray-200 flex items-center justify-center {{ $index === 0 ? 'opacity-100' : 'opacity-0' }}"
-                                                data-index="{{ $index }}">
-                                                <div class="text-center text-gray-500">
-                                                    <i class="fas fa-image text-4xl mb-2"></i>
-                                                    <p>Gambar tidak ditemukan</p>
-                                                    <p class="text-xs">{{ $gambar }}</p>
-                                                </div>
-                                            </div>
-                                        @endif
+                                        <img src="{{ asset('storage/' . $gambar) }}"
+                                            alt="Lokasi Kegiatan {{ $index + 1 }}"
+                                            class="main-image absolute inset-0 w-full h-full object-cover transition-opacity duration-500 {{ $index === 0 ? 'opacity-100' : 'opacity-0' }}"
+                                            data-index="{{ $index }}"
+                                            onerror="this.style.display='none'; console.warn('Gagal memuat gambar: {{ asset('storage/' . $gambar) }}');">
                                     @endforeach
 
                                     <!-- Image Counter -->
@@ -196,23 +170,12 @@
                             <!-- Thumbnails -->
                             <div class="flex gap-2 overflow-x-auto pb-2">
                                 @foreach ($gambarArray as $index => $gambar)
-                                    @php
-                                        $imagePath = asset('storage/' . $gambar);
-                                        $imageExists = file_exists(public_path('storage/' . $gambar));
-                                    @endphp
-
                                     <button
                                         class="thumbnail flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 {{ $index === 0 ? 'border-blue-500 opacity-100' : 'border-transparent opacity-70 hover:opacity-100' }}"
                                         data-index="{{ $index }}">
-                                        @if ($imageExists)
-                                            <img src="{{ $imagePath }}" alt="Thumbnail {{ $index + 1 }}"
-                                                class="w-full h-full object-cover"
-                                                onerror="this.parentElement.innerHTML='<div class=\'w-full h-full bg-gray-300 flex items-center justify-center text-xs text-gray-500\'>Error</div>'">
-                                        @else
-                                            <div class="w-full h-full bg-gray-300 flex items-center justify-center">
-                                                <i class="fas fa-image text-gray-500"></i>
-                                            </div>
-                                        @endif
+                                        <img src="{{ asset('storage/' . $gambar) }}"
+                                            alt="Thumbnail {{ $index + 1 }}" class="w-full h-full object-cover"
+                                            onerror="this.parentElement.innerHTML='<div class=\'w-full h-full bg-gray-300 flex items-center justify-center text-xs text-gray-500\'>Error</div>'">
                                     </button>
                                 @endforeach
                             </div>
@@ -230,12 +193,38 @@
                     </div>
                 @endif
 
+                <!-- Header Form -->
+                <div class="mb-6">
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-2">
+                        {{ $kegiatan->nama_kegiatan ?? 'Kegiatan' }}
+                    </h3>
+                    <p class="text-sm text-gray-600">Silakan lengkapi data berikut untuk mendaftar kegiatan</p>
+                </div>
+
+                <!-- Deskripsi Kegiatan -->
+                @if (!empty($kegiatan->deskripsi_kegiatan))
+                    <div class="mb-4">
+                        <h4 class="text-sm font-medium text-gray-800">Deskripsi Kegiatan:</h4>
+                        <p class="text-sm text-gray-700 mt-1">
+                            {{ $kegiatan->deskripsi_kegiatan }}
+                        </p>
+                    </div>
+                @endif
+
+                <!-- Syarat & Ketentuan -->
+                @if (!empty($kegiatan->syarat_ketentuan))
+                    <div class="mb-4">
+                        <h4 class="text-sm font-medium text-gray-800">Syarat & Ketentuan:</h4>
+                        <p class="text-sm text-gray-700 mt-1">
+                            {{ $kegiatan->syarat_ketentuan }}
+                        </p>
+                    </div>
+                @endif
+
                 <!-- Form -->
                 <form action="{{ route('public.kegiatan.daftar', $kegiatan->id) }}" method="POST"
                     enctype="multipart/form-data" class="space-y-6">
                     @csrf
-                    {{-- @method('PUT') has been removed --}}
-
                     <!-- Display general error messages -->
                     @if ($errors->any())
                         <div class="bg-red-50 border border-red-200 rounded-md p-4">
@@ -494,7 +483,7 @@
                             Batal
                         </a>
                         <button type="submit"
-                            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                            class="bg-[#01577e] hover:bg-[#01577e] text-white px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200">
                             Daftar Sekarang
                         </button>
                     </div>
@@ -502,7 +491,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- JavaScript -->
     <script>

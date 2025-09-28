@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donasi - Darikita</title>
+    <link rel="icon" href="{{ asset('logo.png') }}" type="image/x-icon">
+    <title>Darikita - Donasi</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    {{-- Jika Anda memiliki file CSS kustom, pastikan path-nya benar --}}
     <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
     <style>
         .btn-primary {
-            background: linear-gradient(90deg, #3B82F6, #60A5FA);
+            background: linear-gradient(90deg, #01577e, #198fbf);
             transition: all 0.3s ease;
         }
 
@@ -146,14 +146,14 @@
                 </div>
 
                 <!-- Filter Buttons -->
-                <div class="flex flex-wrap gap-4 pt-4 border-t border-gray-200 mt-4">
-                    <button type="submit" class="btn-primary text-white px-6 py-2 rounded-lg font-medium">
-                        <i class="fas fa-filter mr-2"></i>Filter
-                    </button>
+                <div class="flex flex-wrap justify-end gap-4 pt-4 border-t border-gray-200 mt-4">
                     <a href="{{ route('donasi') }}"
                         class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors duration-200">
                         Reset
                     </a>
+                    <button type="submit" class="btn-primary text-white px-6 py-2 rounded-lg font-medium">
+                        Cari
+                    </button>
                 </div>
             </form>
         </div>
@@ -176,58 +176,16 @@
 
                     <div
                         class="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col">
-                        <div class="relative h-48 overflow-hidden">
-                            <img src="{{ $donasi->gambar ? asset('storage/' . $donasi->gambar) : 'https://placehold.co/600x400/10b981/FFFFFF?text=Donasi' }}"
+                        <div class="relative h-56 overflow-hidden">
+                            <img src="{{ $donasi->gambar ? asset('storage/' . $donasi->gambar) : 'https://placehold.co/600x400/1b3866/FFFFFF?text=Donasi' }}"
                                 alt="{{ $donasi->nama_donasi }}" class="w-full h-full object-cover">
-
-                            <!-- Status Badge -->
-                            <div class="donation-status">
-                                @if ($donasi->status == 'closed' || $isExpired)
-                                    <span class="status-closed text-white text-xs font-bold px-3 py-1 rounded-full">
-                                        Ditutup
-                                    </span>
-                                @elseif($isUrgent)
-                                    <span class="deadline-urgent text-white text-xs font-bold px-3 py-1 rounded-full">
-                                        Mendesak
-                                    </span>
-                                @elseif($isWarning)
-                                    <span class="deadline-warning text-white text-xs font-bold px-3 py-1 rounded-full">
-                                        Segera Berakhir
-                                    </span>
-                                @else
-                                    <span class="status-open text-white text-xs font-bold px-3 py-1 rounded-full">
-                                        Dibuka
-                                    </span>
-                                @endif
-                            </div>
-
-                            <!-- Date Badge -->
-                            <div
-                                class="absolute top-4 left-4 bg-white bg-opacity-90 text-gray-800 text-xs font-bold px-3 py-1 rounded-full">
-                                @if ($isExpired)
-                                    Berakhir: {{ \Carbon\Carbon::parse($donasi->tanggal_selesai)->format('d M Y') }}
-                                @else
-                                    Berakhir: {{ \Carbon\Carbon::parse($donasi->tanggal_selesai)->format('d M Y') }}
-                                @endif
-                            </div>
                         </div>
 
                         <div class="p-6 flex flex-col flex-grow">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                            <div class="flex items-center justify-between mb-2 mt-1">
+                                <!-- Kategori Donasi -->
+                                <span class="bg-[#01577e] text-white text-xs font-medium px-2.5 py-0.5 rounded">
                                     {{ ucfirst($donasi->jenis_donasi) }}
-                                </span>
-                                <span
-                                    class="text-sm {{ $isExpired ? 'text-red-500' : ($isUrgent ? 'text-red-500 font-medium' : 'text-gray-500') }}">
-                                    @if ($isExpired)
-                                        Berakhir
-                                    @elseif($daysLeft == 0)
-                                        Berakhir hari ini
-                                    @elseif($daysLeft == 1)
-                                        {{ $daysLeft }} hari lagi
-                                    @else
-                                        {{ $daysLeft }} hari lagi
-                                    @endif
                                 </span>
                             </div>
 
@@ -235,25 +193,22 @@
                                 {{ $donasi->nama_donasi }}
                             </h3>
 
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
-                                {{ $donasi->deskripsi ?? 'Tidak ada deskripsi tersedia.' }}
-                            </p>
-
                             <!-- Progress Bar -->
                             <div class="mb-4">
                                 <div class="flex justify-between text-sm text-gray-600 mb-2">
                                     <span>Terkumpul</span>
                                     <span>{{ number_format($progress, 1) }}%</span>
                                 </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: {{ min($progress, 100) }}%"></div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-[#01577e] h-2.5 rounded-full"
+                                        style="width: {{ min($progress, 100) }}%"></div>
                                 </div>
                                 <div class="flex justify-between text-sm mt-2">
-                                    <span class="font-semibold text-green-600">
+                                    <span class="font-semibold text-[#01577e]">
                                         Rp {{ number_format($donasi->dana_terkumpul, 0, ',', '.') }}
                                     </span>
                                     <span class="text-gray-500">
-                                        dari Rp {{ number_format($donasi->target_dana, 0, ',', '.') }}
+                                        Rp {{ number_format($donasi->target_dana, 0, ',', '.') }}
                                     </span>
                                 </div>
                             </div>
@@ -273,7 +228,7 @@
                                     </button>
                                 @else
                                     <a href="{{ route('donasi.detail', $donasi->id) }}"
-                                        class="w-full block text-center bg-green-600 hover:bg-green-700 py-2.5 text-white rounded-lg font-medium transition-all">
+                                        class="w-full block text-center bg-[#01577e] hover:bg-[#01567eea] py-2.5 text-white rounded-lg font-medium transition-all">
                                         Donasi Sekarang
                                     </a>
                                 @endif
@@ -290,7 +245,8 @@
                     <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak Ada Donasi Ditemukan</h3>
                     <p class="text-gray-600 mb-6">Coba ubah kriteria pencarian atau filter untuk melihat hasil yang
                         berbeda.</p>
-                    <a href="{{ route('donasi') }}" class="btn-primary text-white px-6 py-2 rounded-lg">
+                    <a href="{{ route('donasi') }}"
+                        class="bg-[#01577e] hover:bg-[#142a4dee] text-white px-6 py-2 rounded-lg transition-all">
                         Reset Filter
                     </a>
                 </div>
@@ -304,35 +260,13 @@
             $programAktif = $donasis->where('status', 'open')->count();
         @endphp
 
-        <div class="lg:mx-32 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl shadow-lg p-8 mb-8 text-white">
-            <div class="text-center mb-6">
-                <h2 class="text-2xl font-bold mb-2">Dampak Kebaikan Bersama</h2>
-                <p class="text-blue-100">Pencapaian donasi yang telah terkumpul</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="text-center">
-                    <div class="text-3xl font-bold mb-2">
-                        Rp {{ number_format($totalDonasi / 1000000, 1) }}M
-                    </div>
-                    <div class="text-blue-100">Total Donasi Terkumpul</div>
-                </div>
-                <div class="text-center">
-                    <div class="text-3xl font-bold mb-2">{{ $totalProgram }}</div>
-                    <div class="text-blue-100">Total Program Donasi</div>
-                </div>
-                <div class="text-center">
-                    <div class="text-3xl font-bold mb-2">{{ $programAktif }}</div>
-                    <div class="text-blue-100">Program Donasi Aktif</div>
-                </div>
-            </div>
-        </div>
-
         <!-- Pagination -->
         <div class="lg:mx-32 bg-white rounded-lg shadow-sm border p-4">
             {{ $donasis->appends(request()->query())->links() }}
         </div>
     </main>
+
+    @include('partials.nav.footer')
 
     <!-- Scripts -->
     <script src="https://unpkg.com/flowbite@2.3.0/dist/flowbite.min.js"></script>

@@ -1,6 +1,6 @@
 <x-admin-layout>
     <x-slot name="header">
-        Buat Donasi Baru
+        Tambah Donatur Baru
     </x-slot>
 
     <div class="py-6">
@@ -25,14 +25,16 @@
                     <!-- Program Donasi -->
                     <div class="mb-6">
                         <label for="donasi_id" class="block text-gray-700 font-semibold mb-2">Program Donasi</label>
+                        <!-- Tambahkan class 'bg-white' di sini untuk memastikan latar belakang putih -->
                         <select id="donasi_id" name="donasi_id"
-                            class="form-select @error('donasi_id') border-red-500 @enderror w-full p-3 border rounded-lg"
+                            class="form-select text-black bg-white @error('donasi_id') border-red-500 @enderror w-full p-3 border rounded-lg"
                             required>
-                            <option value="">-- Pilih Program Donasi --</option>
+                            <option value="" class="text-black bg-white">Pilih Program Donasi</option>
                             @foreach ($donasis as $donasi)
-                                <option value="{{ $donasi->id }}"
+                                <!-- Tambahkan class 'bg-white' di sini untuk memastikan latar belakang putih -->
+                                <option value="{{ $donasi->id }}" class="text-black bg-white"
                                     {{ old('donasi_id') == $donasi->id ? 'selected' : '' }}>
-                                    {{ $donasi->nama_bencana }}
+                                    {{ $donasi->nama_donasi }}
                                 </option>
                             @endforeach
                         </select>

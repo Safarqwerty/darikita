@@ -29,9 +29,15 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/kegiatan/sukses', [DaftarKegiatanController::class, 'sukses'])->name('public.kegiatan.sukses');
+
+    // Rute dengan parameter {id}
     Route::get('/kegiatan/{id}', [PublicController::class, 'showKegiatan'])->name('public.kegiatan.show');
 
     Route::post('/kegiatan/{id}', [DaftarKegiatanController::class, 'store'])->name('public.kegiatan.daftar');
+
+    // Route untuk upload bukti kontribusi
+    Route::post('/upload-bukti-kontribusi/{id}', [DaftarKegiatanController::class, 'uploadBuktiKontribusi'])->name('upload.bukti.kontribusi');
 });
 
 // Rute Admin
@@ -55,6 +61,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
         Route::get('/{id}', [DaftarKegiatanController::class, 'show'])->name('show');
         Route::post('/{id}/approve', [DaftarKegiatanController::class, 'approve'])->name('approve');
         Route::post('/{id}/reject', [DaftarKegiatanController::class, 'reject'])->name('reject');
+        Route::post('/auto-approve/{kegiatan}', [DaftarKegiatanController::class, 'autoApprove'])->name('auto-approve');
     });
 
     // e.g., pemberi-donasi.index, pemberi-donasi.create
@@ -71,3 +78,4 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+

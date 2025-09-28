@@ -29,6 +29,7 @@ class Kegiatan extends Model
         'tanggal_selesai_kegiatan',
         'status',
         'created_by',
+        'link_grup',
     ];
 
     protected $casts = [

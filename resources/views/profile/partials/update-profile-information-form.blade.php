@@ -117,7 +117,7 @@
         <div>
             <x-input-label for="nomor_wa" :value="__('Nomor WhatsApp')" />
             <x-text-input id="nomor_wa" name="nomor_wa" type="text" class="mt-1 block w-full" :value="old('nomor_wa', $user->nomor_wa)"
-                placeholder="Contoh: 6281234567890" />
+                placeholder="Contoh: 081234567890" />
             <x-input-error class="mt-2" :messages="$errors->get('nomor_wa')" />
         </div>
 

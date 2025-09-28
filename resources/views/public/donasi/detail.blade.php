@@ -3,20 +3,25 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Detail Donasi - {{ $donasi->nama_bencana }}</title>
+    <link rel="icon" href="{{ asset('logo.png') }}" type="image/x-icon">
+    <title>Darikita - {{ $donasi->nama_donasi }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @vite('resources/css/app.css') <!-- Jika pakai Vite -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    {{-- Jika Anda memiliki file CSS kustom, pastikan path-nya benar --}}
+    <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
 </head>
 
-<body">
+<body class="bg-gray-50">
     @include('partials.nav.welcome')
 
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 p-6">
 
         <div class="bg-white rounded-lg shadow-lg overflow-hidden">
             @if ($donasi->gambar)
-                <div class="w-full h-64 md:h-80">
-                    <img src="{{ asset('storage/' . $donasi->gambar) }}" alt="{{ $donasi->judul }}"
+                <div class="w-full h-64 md:h-96">
+                    <img src="{{ asset('storage/' . $donasi->gambar) }}" alt="{{ $donasi->nama_donasi }}"
                         class="w-full h-full object-cover">
                 </div>
             @endif
@@ -24,11 +29,11 @@
             <div class="p-6 md:p-8">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                     <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2 md:mb-0">
-                        {{ $donasi->nama_bencana }}
+                        {{ $donasi->nama_donasi }}
                     </h1>
                     <span
                         class="inline-flex px-3 py-1 text-sm font-medium rounded-full
-                        {{ $donasi->status === 'aktif' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }}">
+                        {{ $donasi->status === 'open' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                         {{ ucfirst($donasi->status) }}
                     </span>
                 </div>
@@ -95,13 +100,13 @@
                         <div>
                             <div class="font-medium text-gray-900">Tanggal Berakhir</div>
                             <div class="text-sm text-gray-600">
-                                {{ \Carbon\Carbon::parse($donasi->tanggal_berakhir)->locale('id')->isoFormat('dddd, D MMMM Y') }}
+                                {{ \Carbon\Carbon::parse($donasi->tanggal_selesai)->locale('id')->isoFormat('dddd, D MMMM Y') }}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                @if ($donasi->status === 'aktif')
+                @if ($donasi->status === 'open')
                     <div class="text-center">
                         <a href="#" onclick="showDonationModal()"
                             class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-green-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-green-700 transform hover:scale-105 transition-all duration-200 shadow-lg">
@@ -122,7 +127,7 @@
                                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z">
                                 </path>
                             </svg>
-                            Program Donasi Tidak Aktif
+                            Program Donasi Telah Ditutup
                         </div>
                     </div>
                 @endif
@@ -130,13 +135,13 @@
         </div>
     </div>
 
-    <!-- Modal -->
-    <div id="donationModal"
-        class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-lg max-w-md w-full p-6">
+    <!-- Modal QRIS -->
+    <div id="donationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-sm w-full p-6 text-center">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold">Berdonasi untuk {{ $donasi->judul }}</h3>
-                <button onclick="closeDonationModal()" class="text-gray-400 hover:text-gray-600">
+                <h3 class="text-lg font-semibold text-gray-800">Scan untuk Berdonasi</h3>
+                {{-- Tombol close memanggil fungsi dengan parameter 'true' untuk refresh --}}
+                <button onclick="closeDonationModal(true)" class="text-gray-400 hover:text-gray-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
                         </path>
@@ -144,41 +149,53 @@
                 </button>
             </div>
 
-            <form action="#" method="POST" class="space-y-4">
-                @csrf
-                <input type="hidden" name="donasi_id" value="{{ $donasi->id }}">
-                <!-- Input fields as before -->
-                <!-- ... -->
-                <div class="flex space-x-3 pt-4">
-                    <button type="button" onclick="closeDonationModal()"
-                        class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors">
-                        Batal
-                    </button>
-                    <button type="submit"
-                        class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
-                        Lanjutkan Donasi
-                    </button>
-                </div>
-            </form>
+            <div class="flex justify-center mb-4">
+                {{-- Pastikan Anda memiliki file qris.png di folder public --}}
+                <img src="{{ asset('qris.png') }}" alt="QRIS Code" class="w-64 h-64 object-contain">
+            </div>
+
+            <p class="text-gray-700 mb-6">
+                Silahkan scan QRIS di atas dan masukkan nominal donasi Anda. Jumlah donasi akan terupdate secara
+                otomatis setelah pembayaran terverifikasi.
+            </p>
+
+            {{-- Tombol Selesai juga memanggil fungsi dengan parameter 'true' untuk refresh --}}
+            <button type="button" onclick="closeDonationModal(true)"
+                class="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors shadow-md">
+                Selesai
+            </button>
         </div>
     </div>
 
     <script>
         function showDonationModal() {
-            document.getElementById('donationModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+            event.preventDefault(); // Mencegah default action dari tag <a>
+            const modal = document.getElementById('donationModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex'); // Menggunakan flex untuk memusatkan modal
+            document.body.style.overflow = 'hidden'; // Mencegah scroll di background
         }
 
-        function closeDonationModal() {
-            document.getElementById('donationModal').classList.add('hidden');
-            document.body.style.overflow = 'auto';
+        function closeDonationModal(refresh = false) {
+            const modal = document.getElementById('donationModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto'; // Mengaktifkan kembali scroll
+
+            // Jika refresh bernilai true, muat ulang halaman
+            if (refresh) {
+                // Beri sedikit jeda agar pengguna melihat modal tertutup sebelum reload
+                setTimeout(() => {
+                    location.reload();
+                }, 200);
+            }
         }
+
+        // Menutup modal jika pengguna mengklik area di luar modal (backdrop)
         document.getElementById('donationModal').addEventListener('click', function(e) {
-            if (e.target === this) closeDonationModal();
-        });
-        document.getElementById('jumlah_donasi')?.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            e.target.value = value;
+            if (e.target === this) {
+                closeDonationModal(true); // Tutup dan refresh halaman
+            }
         });
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -189,8 +206,6 @@
             if (mobileMenuButton && mobileMenu) {
                 mobileMenuButton.addEventListener('click', function() {
                     mobileMenu.classList.toggle('hidden');
-
-                    // Update button icon
                     const svg = mobileMenuButton.querySelector('svg');
                     if (mobileMenu.classList.contains('hidden')) {
                         svg.innerHTML =
@@ -212,29 +227,15 @@
                     userDropdown.classList.toggle('hidden');
                 });
 
-                // Close dropdown when clicking outside
                 document.addEventListener('click', function(e) {
                     if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
                         userDropdown.classList.add('hidden');
                     }
                 });
             }
-
-            // Close mobile menu when clicking on links
-            const mobileLinks = mobileMenu?.querySelectorAll('a');
-            if (mobileLinks) {
-                mobileLinks.forEach(link => {
-                    link.addEventListener('click', function() {
-                        mobileMenu.classList.add('hidden');
-                        const svg = mobileMenuButton.querySelector('svg');
-                        svg.innerHTML =
-                            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
-                    });
-                });
-            }
         });
     </script>
 
-    </body>
+</body>
 
 </html>

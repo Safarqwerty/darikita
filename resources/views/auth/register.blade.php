@@ -62,9 +62,9 @@
         <!-- Already Registered Link -->
         <div class="mt-6 text-center">
             <p class="text-sm text-gray-600">
-                {{ __('Already registered?') }}
+                {{ __('Sudah daftar?') }}
                 <a class="underline text-indigo-600 hover:text-indigo-800 font-medium" href="{{ route('login') }}">
-                    {{ __('Log in here') }}
+                    {{ __('Masuk di sini') }}
                 </a>
             </p>
         </div>

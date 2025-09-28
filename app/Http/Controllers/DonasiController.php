@@ -49,7 +49,7 @@ class DonasiController extends Controller
         }
 
         $request->validate([
-            'nama_bencana' => 'required|string|max:255',
+            'nama_donasi' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'target_dana' => 'required|numeric|min:0',
             'tanggal_mulai' => 'required|date',
@@ -66,7 +66,7 @@ class DonasiController extends Controller
             'jenis_donasi' => $request->jenis_donasi,
             'deskripsi' => $request->deskripsi,
             'target_dana' => $request->target_dana,
-            'dana_terkumpul' => 0, // Default 0
+            'dana_terkumpul' => 0,
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
             'status' => $request->status,

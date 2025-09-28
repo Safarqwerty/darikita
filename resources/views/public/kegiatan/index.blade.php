@@ -4,14 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kegiatan - Darikita</title>
+    <link rel="icon" href="{{ asset('logo.png') }}" type="image/x-icon">
+    <title>Darikita - Kegiatan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     {{-- Jika Anda memiliki file CSS kustom, pastikan path-nya benar --}}
     <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
     <style>
         .btn-primary {
-            background: linear-gradient(90deg, #3B82F6, #60A5FA);
+            background: linear-gradient(90deg, #01577e, #198fbf);
             transition: all 0.3s ease;
         }
 
@@ -25,7 +26,7 @@
             display: block;
             width: 50px;
             height: 4px;
-            background: linear-gradient(90deg, #3B82F6, #60A5FA);
+            background: linear-gradient(90deg, #01577e, #198fbf);
             margin: 0.75rem auto 0;
             border-radius: 2px;
         }
@@ -102,15 +103,15 @@
                     </div>
                 </div>
 
-                <!-- Filter Buttons -->
-                <div class="flex flex-wrap gap-4 pt-4 border-t border-gray-200 mt-4">
-                    <button type="submit" class="btn-primary text-white px-6 py-2 rounded-lg font-medium">
-                        <i class="fas fa-filter mr-2"></i>Filter
-                    </button>
+                <!-- Filter Buttons - now aligned to the right -->
+                <div class="flex flex-wrap justify-end gap-4 pt-4 border-t border-gray-200 mt-4">
                     <a href="{{ route('kegiatan') }}"
                         class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors duration-200">
                         Reset
                     </a>
+                    <button type="submit" class="btn-primary text-white px-6 py-2 rounded-lg font-medium">
+                        Cari
+                    </button>
                 </div>
             </form>
         </div>
@@ -119,35 +120,74 @@
             <!-- Kegiatan Grid dengan padding konsisten seperti welcome page -->
             <div class="lg:px-32 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
                 @foreach ($kegiatans as $kegiatan)
-                    <div
-                        class="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col">
-                        <div class="relative h-48 overflow-hidden">
-                            <img src="{{ $kegiatan->gambar_sampul ? asset('storage/' . $kegiatan->gambar_sampul) : 'https://placehold.co/600x400/3B82F6/FFFFFF?text=Kegiatan' }}"
-                                alt="{{ $kegiatan->nama_kegiatan }}" class="w-full h-full object-cover">
-                            <div
-                                class="absolute top-4 right-4 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-                                {{ ucfirst($kegiatan->jenis_kegiatan) }}
-                            </div>
-                            <div
-                                class="absolute top-4 left-4 bg-white bg-opacity-90 text-gray-800 text-xs font-bold px-3 py-1 rounded-full">
-                                {{ \Carbon\Carbon::parse($kegiatan->tanggal_mulai_kegiatan)->format('d M Y') }}
-                            </div>
+                    @php
+                        $daysLeft = \Carbon\Carbon::now()->diffInDays(
+                            \Carbon\Carbon::parse($kegiatan->tanggal_selesai_daftar),
+                            false,
+                        );
+                        $isRegistrationClosed = $daysLeft < 0;
+                        $isUrgent = $daysLeft <= 7 && $daysLeft >= 0;
+                    @endphp[]
+
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2 @if ($isUrgent) border-2 @else @endif flex flex-col"
+                        data-aos="fade-up" data-aos-delay="{{ $loop->iteration * 100 }}">
+
+                        <!-- Image -->
+                        <div class="relative h-56 overflow-hidden">
+                            <img src="{{ $kegiatan->gambar_sampul ? asset('storage/' . $kegiatan->gambar_sampul) : 'https://placehold.co/600x400/01577e/FFFFFF?text=Kegiatan' }}"
+                                alt="{{ $kegiatan->nama_kegiatan }}" class="w-full h-full object-cover" loading="lazy">
                         </div>
 
                         <div class="p-6 flex flex-col flex-grow">
-                            <h3 class="text-xl font-bold text-gray-800 mb-2 line-clamp-2 flex-grow">
+                            <!-- Badge -->
+                            <span
+                                class="bg-[#01577e] text-white text-xs font-medium px-2.5 py-0.5 rounded mb-3 self-start">
+                                {{ ucfirst($kegiatan->jenis_kegiatan) }}
+                            </span>
+
+                            <!-- Title -->
+                            <h3 class="text-xl font-bold text-gray-800 mb-3 line-clamp-2">
                                 {{ $kegiatan->nama_kegiatan }}
                             </h3>
-                            <div class="flex items-center text-gray-600 text-sm mb-3">
-                                <i class="fas fa-map-marker-alt mr-2"></i>
-                                <span class="line-clamp-1">{{ $kegiatan->kabupaten_kota }},
-                                    {{ $kegiatan->provinsi }}</span>
+
+                            <!-- Registration Info -->
+                            <div class="flex justify-between items-center text-gray-600 text-sm mb-3">
+                                <div class="flex items-center">
+                                    <i class="fas fa-user-clock mr-2 text-[#01577e]"></i>
+                                    <span>
+                                        {{ \Carbon\Carbon::parse($kegiatan->tanggal_mulai_daftar)->format('d M') }} -
+                                        {{ \Carbon\Carbon::parse($kegiatan->tanggal_selesai_daftar)->format('d M Y') }}
+                                    </span>
+                                </div>
+                                <span class="bg-gray-100 px-2 py-0.5 rounded text-xs">
+                                    @if ($kegiatan->batas_pendaftar)
+                                        Kuota: {{ $kegiatan->batas_pendaftar }}
+                                    @else
+                                        Tanpa batas
+                                    @endif
+                                </span>
                             </div>
+
+                            <!-- Location -->
+                            <div class="flex items-center text-gray-600 text-sm mb-4">
+                                <i class="fas fa-map-marker-alt mr-2 text-[#01577e]"></i>
+                                <span class="line-clamp-1">{{ $kegiatan->kelurahan_desa }},
+                                    {{ $kegiatan->kabupaten_kota }}</span>
+                            </div>
+
+                            <!-- Button -->
                             <div class="mt-auto pt-4">
-                                <a href="{{ route('public.kegiatan.show', $kegiatan->id) }}"
-                                    class="w-full block text-center bg-green-600 hover:bg-green-700 py-2.5 text-white rounded-lg font-medium transition-all">
-                                    Lihat Detail
-                                </a>
+                                @if ($isRegistrationClosed)
+                                    <button disabled
+                                        class="w-full block text-center bg-gray-400 py-2.5 text-white rounded-lg font-medium cursor-not-allowed">
+                                        Pendaftaran Ditutup
+                                    </button>
+                                @else
+                                    <a href="{{ route('public.kegiatan.show', $kegiatan->id) }}"
+                                        class="w-full block text-center bg-[#01577e] hover:bg-[#01567ee8] py-2.5 text-white rounded-lg font-medium transition-all">
+                                        Daftar Sekarang
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -173,6 +213,8 @@
             {{ $kegiatans->appends(request()->query())->links() }}
         </div>
     </main>
+
+    @include('partials.nav.footer')
 
     <!-- Flowbite JS -->
     <script src="https://unpkg.com/flowbite@2.3.0/dist/flowbite.min.js"></script>

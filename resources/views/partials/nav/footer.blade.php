@@ -12,14 +12,17 @@
                     <p class="text-gray-400 mb-6">Platform relawan terpercaya yang menghubungkan jiwa-jiwa peduli untuk
                         membuat perubahan nyata di Indonesia.</p>
                     <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition"><i
-                                class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white transition"><i
-                                class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white transition"><i
-                                class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white transition"><i
-                                class="fab fa-youtube"></i></a>
+                        <!-- Instagram -->
+                        <a href="https://www.instagram.com/darikitaindonesia?igsh=MXBxbGlhaWhkYnMxbw==" target="_blank"
+                            class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+
+                        <!-- TikTok -->
+                        <a href="https://www.tiktok.com/@darikitaindonesia_?_t=ZS-8yKE8svzJek&_r=1" target="_blank"
+                            class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-tiktok text-xl"></i>
+                        </a>
                     </div>
                 </div>
                 <div>
@@ -46,13 +49,12 @@
                 <div>
                     <h4 class="text-lg font-semibold mb-6">Hubungi Kami</h4>
                     <ul class="space-y-3">
-                        <li class="flex items-start"><i
-                                class="fas fa-map-marker-alt text-blue-400 mt-1 mr-3"></i><span
-                                class="text-gray-400">Jl. Relawan No. 123, Jakarta</span></li>
-                        <li class="flex items-start"><i class="fas fa-phone text-blue-400 mt-1 mr-3"></i><span
-                                class="text-gray-400">+62 21 1234 5678</span></li>
-                        <li class="flex items-start"><i class="fas fa-envelope text-blue-400 mt-1 mr-3"></i><span
-                                class="text-gray-400">info@darikita.id</span></li>
+                        <li class="flex items-start"><i class="fas fa-map-marker-alt text-white mt-1 mr-3"></i><span
+                                class="text-gray-400">Makassar</span></li>
+                        <li class="flex items-start"><i class="fas fa-phone text-white mt-1 mr-3"></i><span
+                                class="text-gray-400">+62859-1962-63098</span></li>
+                        <li class="flex items-start"><i class="fas fa-envelope text-white mt-1 mr-3"></i><span
+                                class="text-gray-400">darikitaindonesia@gmail.com</span></li>
                     </ul>
                 </div>
             </div>

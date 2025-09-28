@@ -16,6 +16,9 @@ class KegiatanController extends Controller
      */
     public function index()
     {
+        // Update status otomatis untuk semua kegiatan yang perlu diupdate
+        $this->updateStatusAutomatically();
+
         $kegiatans = Kegiatan::with('creator')->latest()->paginate(10);
         return view('admin.kegiatan.index', compact('kegiatans'));
     }
@@ -48,14 +51,15 @@ class KegiatanController extends Controller
             'kecamatan' => 'required|string|max:255',
             'kelurahan_desa' => 'required|string|max:255',
             'batas_pendaftar' => 'nullable|integer|min:1',
-            'gambar_sampul' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'gambar_sampul' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'gambar_lokasi' => 'nullable|array|max:10',
-            'gambar_lokasi.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'gambar_lokasi.*' => 'image|mimes:jpeg,png,jpg|max:20048',
             'tanggal_mulai_daftar' => 'required|date',
             'tanggal_selesai_daftar' => 'required|date|after_or_equal:tanggal_mulai_daftar',
             'tanggal_mulai_kegiatan' => 'required|date',
             'tanggal_selesai_kegiatan' => 'required|date|after_or_equal:tanggal_mulai_kegiatan',
             'status' => 'required|string|in:draft,publish,selesai',
+            'link_grup' => 'required|url|max:255',
         ]);
 
         $data = $request->all();
@@ -65,14 +69,17 @@ class KegiatanController extends Controller
             $data['gambar_sampul'] = $request->file('gambar_sampul')->store('kegiatan/sampul', 'public');
         }
 
-        // Handle multiple gambar lokasi upload
+        // Handle multiple gambar lokasi upload dengan null safety
+        $gambarLokasiPaths = [];
         if ($request->hasFile('gambar_lokasi')) {
-            $gambarLokasiPaths = [];
             foreach ($request->file('gambar_lokasi') as $file) {
-                $gambarLokasiPaths[] = $file->store('kegiatan/lokasi', 'public');
+                $path = $file->store('kegiatan/lokasi', 'public');
+                $gambarLokasiPaths[] = $path;
             }
-            $data['gambar_lokasi'] = $gambarLokasiPaths; // Laravel akan otomatis convert ke JSON karena cast 'array'
         }
+
+        // Set gambar_lokasi - bahkan jika array kosong, akan tersimpan sebagai JSON []
+        $data['gambar_lokasi'] = $gambarLokasiPaths;
 
         $data['created_by'] = Auth::id();
 
@@ -89,6 +96,9 @@ class KegiatanController extends Controller
      */
     public function show(Kegiatan $kegiatan)
     {
+        // Update status otomatis untuk kegiatan ini
+        $this->updateStatusAutomatically($kegiatan);
+
         $kegiatan->load(['creator', 'pendaftar.user']);
         return view('admin.kegiatan.show', compact('kegiatan'));
     }
@@ -125,18 +135,19 @@ class KegiatanController extends Controller
             'batas_pendaftar' => 'nullable|integer|min:1',
             'gambar_sampul' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'gambar_lokasi' => 'nullable|array|max:10',
-            'gambar_lokasi.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'gambar_lokasi.*' => 'image|mimes:jpeg,png,jpg|max:20048',
             'tanggal_mulai_daftar' => 'required|date',
             'tanggal_selesai_daftar' => 'required|date|after_or_equal:tanggal_mulai_daftar',
             'tanggal_mulai_kegiatan' => 'required|date',
             'tanggal_selesai_kegiatan' => 'required|date|after_or_equal:tanggal_mulai_kegiatan',
             'status' => 'required|string|in:draft,publish,selesai',
+            'link_grup' => 'required|url|max:255',
         ]);
 
         // Handle gambar sampul upload
         if ($request->hasFile('gambar_sampul')) {
             // Delete old gambar sampul if exists
-            if ($kegiatan->gambar_sampul) {
+            if ($kegiatan->gambar_sampul && Storage::disk('public')->exists($kegiatan->gambar_sampul)) {
                 Storage::disk('public')->delete($kegiatan->gambar_sampul);
             }
             $data['gambar_sampul'] = $request->file('gambar_sampul')->store('kegiatan/sampul', 'public');
@@ -147,18 +158,24 @@ class KegiatanController extends Controller
             // Delete old gambar lokasi if exists
             if ($kegiatan->gambar_lokasi && is_array($kegiatan->gambar_lokasi)) {
                 foreach ($kegiatan->gambar_lokasi as $oldImage) {
-                    Storage::disk('public')->delete($oldImage);
+                    if (Storage::disk('public')->exists($oldImage)) {
+                        Storage::disk('public')->delete($oldImage);
+                    }
                 }
             }
 
             $gambarLokasiPaths = [];
             foreach ($request->file('gambar_lokasi') as $file) {
-                $gambarLokasiPaths[] = $file->store('kegiatan/lokasi', 'public');
+                $path = $file->store('kegiatan/lokasi', 'public');
+                $gambarLokasiPaths[] = $path;
             }
-            $data['gambar_lokasi'] = $gambarLokasiPaths; // Laravel akan otomatis convert ke JSON
+            $data['gambar_lokasi'] = $gambarLokasiPaths;
         }
 
         $kegiatan->update($data);
+
+        // Update status otomatis setelah update
+        $this->updateStatusAutomatically($kegiatan);
 
         return redirect()->route('kegiatan.index')->with('success', 'Kegiatan berhasil diperbarui!');
     }
@@ -186,5 +203,27 @@ class KegiatanController extends Controller
         $kegiatan->delete();
 
         return redirect()->route('kegiatan.index')->with('success', 'Kegiatan berhasil dihapus!');
+    }
+
+    /**
+     * Update status kegiatan secara otomatis berdasarkan tanggal
+     *
+     * @param \App\Models\Kegiatan|null $kegiatan
+     */
+    protected function updateStatusAutomatically(Kegiatan $kegiatan = null)
+    {
+        $now = now()->format('Y-m-d');
+
+        if ($kegiatan) {
+            // Untuk single kegiatan
+            if ($kegiatan->tanggal_selesai_daftar < $now && $kegiatan->status != 'selesai') {
+                $kegiatan->update(['status' => 'selesai']);
+            }
+        } else {
+            // Untuk semua kegiatan
+            Kegiatan::where('tanggal_selesai_daftar', '<', $now)
+                ->where('status', '!=', 'selesai')
+                ->update(['status' => 'selesai']);
+        }
     }
 }

@@ -10,8 +10,7 @@
 
                 <div class="mb-4">
                     <label class="block font-semibold mb-1">Nama Kegiatan</label>
-                    <input type="text" name="nama_kegiatan" class="w-full border rounded px-3 py-2"
-                        value="{{ old('nama_kegiatan') }}" required>
+                    <input type="text" name="nama_kegiatan" class="w-full border rounded px-3 py-2" required>
                     @error('nama_kegiatan')
                         <p class="text-red-600 text-sm">{{ $message }}</p>
                     @enderror
@@ -19,8 +18,14 @@
 
                 <div class="mb-4">
                     <label class="block font-semibold mb-1">Jenis Kegiatan</label>
-                    <input type="text" name="jenis_kegiatan" class="w-full border rounded px-3 py-2"
-                        value="{{ old('jenis_kegiatan') }}" required>
+                    <select name="jenis_kegiatan" class="w-full border rounded px-3 py-2" required>
+                        <option value="">Pilih Jenis Kegiatan</option>
+                        <option value="pendidikan">Pendidikan</option>
+                        <option value="bencana">Bencana</option>
+                        <option value="sosial">Sosial</option>
+                        <option value="lingkungan">Lingkungan</option>
+                        <option value="kesehatan">Kesehatan</option>
+                    </select>
                     @error('jenis_kegiatan')
                         <p class="text-red-600 text-sm">{{ $message }}</p>
                     @enderror
@@ -28,7 +33,7 @@
 
                 <div class="mb-4">
                     <label class="block font-semibold mb-1">Deskripsi Kegiatan</label>
-                    <textarea name="deskripsi_kegiatan" class="w-full border rounded px-3 py-2" rows="4" required>{{ old('deskripsi_kegiatan') }}</textarea>
+                    <textarea name="deskripsi_kegiatan" class="w-full border rounded px-3 py-2" rows="4" required></textarea>
                     @error('deskripsi_kegiatan')
                         <p class="text-red-600 text-sm">{{ $message }}</p>
                     @enderror
@@ -36,7 +41,7 @@
 
                 <div class="mb-4">
                     <label class="block font-semibold mb-1">Syarat & Ketentuan (opsional)</label>
-                    <textarea name="syarat_ketentuan" class="w-full border rounded px-3 py-2" rows="3">{{ old('syarat_ketentuan') }}</textarea>
+                    <textarea name="syarat_ketentuan" class="w-full border rounded px-3 py-2" rows="3"></textarea>
                     @error('syarat_ketentuan')
                         <p class="text-red-600 text-sm">{{ $message }}</p>
                     @enderror
@@ -48,8 +53,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block font-semibold mb-1">Provinsi</label>
-                            <input type="text" name="provinsi" class="w-full border rounded px-3 py-2"
-                                value="{{ old('provinsi') }}" required>
+                            <input type="text" name="provinsi" class="w-full border rounded px-3 py-2" required>
                             @error('provinsi')
                                 <p class="text-red-600 text-sm">{{ $message }}</p>
                             @enderror
@@ -57,15 +61,14 @@
                         <div>
                             <label class="block font-semibold mb-1">Kabupaten/Kota</label>
                             <input type="text" name="kabupaten_kota" class="w-full border rounded px-3 py-2"
-                                value="{{ old('kabupaten_kota') }}" required>
+                                required>
                             @error('kabupaten_kota')
                                 <p class="text-red-600 text-sm">{{ $message }}</p>
                             @enderror
                         </div>
                         <div>
                             <label class="block font-semibold mb-1">Kecamatan</label>
-                            <input type="text" name="kecamatan" class="w-full border rounded px-3 py-2"
-                                value="{{ old('kecamatan') }}" required>
+                            <input type="text" name="kecamatan" class="w-full border rounded px-3 py-2" required>
                             @error('kecamatan')
                                 <p class="text-red-600 text-sm">{{ $message }}</p>
                             @enderror
@@ -73,7 +76,7 @@
                         <div>
                             <label class="block font-semibold mb-1">Kelurahan/Desa</label>
                             <input type="text" name="kelurahan_desa" class="w-full border rounded px-3 py-2"
-                                value="{{ old('kelurahan_desa') }}" required>
+                                required>
                             @error('kelurahan_desa')
                                 <p class="text-red-600 text-sm">{{ $message }}</p>
                             @enderror
@@ -83,8 +86,7 @@
 
                 <div class="mb-4">
                     <label class="block font-semibold mb-1">Batas Pendaftar (opsional)</label>
-                    <input type="number" name="batas_pendaftar" class="w-full border rounded px-3 py-2"
-                        value="{{ old('batas_pendaftar') }}">
+                    <input type="number" name="batas_pendaftar" class="w-full border rounded px-3 py-2">
                     @error('batas_pendaftar')
                         <p class="text-red-600 text-sm">{{ $message }}</p>
                     @enderror
@@ -125,7 +127,7 @@
                         <div>
                             <label class="block font-semibold mb-1">Tanggal Mulai Pendaftaran</label>
                             <input type="date" name="tanggal_mulai_daftar" class="w-full border rounded px-3 py-2"
-                                value="{{ old('tanggal_mulai_daftar') }}" required>
+                                required>
                             @error('tanggal_mulai_daftar')
                                 <p class="text-red-600 text-sm">{{ $message }}</p>
                             @enderror
@@ -133,15 +135,14 @@
                         <div>
                             <label class="block font-semibold mb-1">Tanggal Selesai Pendaftaran</label>
                             <input type="date" name="tanggal_selesai_daftar" class="w-full border rounded px-3 py-2"
-                                value="{{ old('tanggal_selesai_daftar') }}" required>
+                                required>
                             @error('tanggal_selesai_daftar')
                                 <p class="text-red-600 text-sm">{{ $message }}</p>
                             @enderror
                         </div>
                         <div>
                             <label class="block font-semibold mb-1">Tanggal Mulai Kegiatan</label>
-                            <input type="date" name="tanggal_mulai_kegiatan"
-                                class="w-full border rounded px-3 py-2" value="{{ old('tanggal_mulai_kegiatan') }}"
+                            <input type="date" name="tanggal_mulai_kegiatan" class="w-full border rounded px-3 py-2"
                                 required>
                             @error('tanggal_mulai_kegiatan')
                                 <p class="text-red-600 text-sm">{{ $message }}</p>
@@ -150,8 +151,7 @@
                         <div>
                             <label class="block font-semibold mb-1">Tanggal Selesai Kegiatan</label>
                             <input type="date" name="tanggal_selesai_kegiatan"
-                                class="w-full border rounded px-3 py-2" value="{{ old('tanggal_selesai_kegiatan') }}"
-                                required>
+                                class="w-full border rounded px-3 py-2" required>
                             @error('tanggal_selesai_kegiatan')
                                 <p class="text-red-600 text-sm">{{ $message }}</p>
                             @enderror
@@ -160,11 +160,21 @@
                 </div>
 
                 <div class="mb-6">
+                    <label class="block font-semibold mb-1">Link Grup (WhatsApp/Telegram)</label>
+                    <input type="url" name="link_grup" class="w-full border rounded px-3 py-2"
+                        placeholder="https://chat.whatsapp.com/...">
+                    <p class="text-sm text-gray-600 mt-1">Masukkan link grup komunikasi untuk kegiatan ini</p>
+                    @error('link_grup')
+                        <p class="text-red-600 text-sm">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-6">
                     <label class="block font-semibold mb-1">Status</label>
                     <select name="status" class="w-full border rounded px-3 py-2" required>
-                        <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>Draft</option>
-                        <option value="publish" {{ old('status') == 'publish' ? 'selected' : '' }}>Publish</option>
-                        <option value="selesai" {{ old('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                        <option value="draft">Draft</option>
+                        <option value="publish">Publish</option>
+                        <option value="selesai">Selesai</option>
                     </select>
                     @error('status')
                         <p class="text-red-600 text-sm">{{ $message }}</p>
